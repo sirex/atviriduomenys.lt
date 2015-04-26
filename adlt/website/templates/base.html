@@ -1,0 +1,29 @@
+{% load static from staticfiles %}
+{% load compress from compress %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bootstrap 101 Template</title>
+
+    {% compress css %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-theme.css" %}">
+    <link rel="stylesheet" type="text/x-scss" href="{% static "css/main.scss" %}">
+    {% endcompress %}
+
+  </head>
+  <body>
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <script src="{% static "jquery.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script data-main="{% static "js/main.js" %}" src="{% static "require.min.js" %}"></script>
+  </body>
+</html>

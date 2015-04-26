@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load trans from i18n %}
+
+
+{% block content %}
+<a href="{% url "create-project" %}" class="btn btn-success">{% trans "Pateikti naują projektą" %}</a>
+{% endblock %}
