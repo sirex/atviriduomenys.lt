@@ -17,6 +17,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = str(PROJECT_DIR / 'var/www/media')
 STATIC_URL = '/static/'
 STATIC_ROOT = str(PROJECT_DIR / 'var/www/static')
+LANGUAGE_CODE = 'lt'
 
 INSTALLED_APPS = (
     'django.contrib.staticfiles',
@@ -38,6 +39,13 @@ TEMPLATES = [
         'APP_DIRS': True,
     },
 ]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'atviriduomenys',
+    }
+}
 
 
 # Static assets, see config/assets.cfg
@@ -66,6 +74,14 @@ COMPRESS_PRECOMPILERS = (
 
 INSTALLED_APPS += (
     'debug_toolbar',
+)
+
+
+# django-extensions
+# http://django-extensions.readthedocs.org/
+
+INSTALLED_APPS += (
+    'django_extensions',
 )
 
 

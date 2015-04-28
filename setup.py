@@ -13,6 +13,12 @@ setup(
         'django-crispy-forms',
         'django-floppyforms',
         'django-debug-toolbar',
+        'django-extensions',
+        'wtforms',
+        'wtforms-django',
+        'markdown',
+        'xmltodict',
+        'yattag',
         'psycopg2',
     ],
     classifiers=[
