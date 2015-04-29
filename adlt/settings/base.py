@@ -11,7 +11,7 @@ PROJECT_DIR = pathlib.Path(__file__).parents[2]
 # https://docs.djangoproject.com/en/stable/ref/settings/
 
 DEBUG = False
-ROOT_URLCONF = 'adlt.settings.urls'
+ROOT_URLCONF = 'adlt.website.urls'
 SECRET_KEY = config['settings']['secret_key']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = str(PROJECT_DIR / 'var/www/media')
@@ -21,11 +21,16 @@ LANGUAGE_CODE = 'lt'
 
 INSTALLED_APPS = (
     'django.contrib.staticfiles',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.auth',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
 
 STATICFILES_FINDERS = (
@@ -85,20 +90,21 @@ INSTALLED_APPS += (
 )
 
 
+# django-nose
+# https://pypi.python.org/pypi/django-nose
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+INSTALLED_APPS += (
+    'django_nose',
+)
+
+
 # App settings
 
 INSTALLED_APPS += (
     'adlt.core',
     'adlt.website',
     'adlt.frontpage',
-)
-
-
-# django-crispy-forms settings
-# http://django-crispy-forms.readthedocs.org/
-
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
-INSTALLED_APPS += (
-    'crispy_forms',
+    'adlt.populatedb',
 )

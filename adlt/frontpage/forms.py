@@ -1,12 +1,12 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from adlt.core import models
+import adlt.core.models as core_models
 
 
 class ProjectForm(forms.ModelForm):
     class Meta:
-        model = models.Project
+        model = core_models.Project
         fields = ('title', 'description', 'datasets_links')
         widgets = {
             'description': forms.Textarea(attrs={'rows': 16}),
@@ -34,8 +34,16 @@ class ProjectForm(forms.ModelForm):
 
 class DatasetForm(forms.ModelForm):
     class Meta:
-        model = models.Dataset
-        fields = ('title', 'organization', 'maturity_level', 'link', 'description')
+        model = core_models.Dataset
+        fields = (
+            'title', 'organization', 'maturity_level', 'link', 'description',
+        )
         widgets = {
             'description': forms.Textarea(attrs={'rows': 16}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['organization'].queryset = (
+            core_models.Organization.objects.all()
+        )

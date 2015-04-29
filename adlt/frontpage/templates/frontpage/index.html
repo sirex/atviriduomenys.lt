@@ -5,4 +5,25 @@
 {% block content %}
 <a href="{% url "create-dataset" %}" class="btn btn-success">{% trans "Pateikti naują duomenų šaltinį" %}</a>
 <a href="{% url "create-project" %}" class="btn btn-success">{% trans "Pateikti naują projektą" %}</a>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>{% trans "Organizacija" %}</th>
+      <th>{% trans "Brandos lygmuo" %}</th>
+      <th>{% trans "Projektų" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for org in organizations %}
+    <tr>
+      <td>{{ org.title }}</td>
+      <td>{{ org.stars }}</td>
+      <td>{{ org.projects }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 {% endblock %}

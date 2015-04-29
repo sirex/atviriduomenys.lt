@@ -5,6 +5,9 @@ from django.utils.translation import ugettext_lazy as _
 class Organization(models.Model):
     title = models.CharField(_("Pavadinimas"), max_length=255)
 
+    def __str__(self):
+        return self.title
+
 
 class Dataset(models.Model):
     OPEN_LICENCE = 1
