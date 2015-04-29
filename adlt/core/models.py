@@ -24,16 +24,11 @@ class Dataset(models.Model):
     )
 
     title = models.CharField(_("Pavadinimas"), max_length=255)
-    organization = models.ForeignKey(
-        Organization,
-        verbose_name=_("Organizacija"),
-        help_text=_("Oranizacija teikianti duomenis."),
-    )
+    organization = models.ForeignKey(Organization, verbose_name=_("Organizacija"), help_text=_(
+        "Oranizacija teikianti duomenis."
+    ))
     description = models.TextField(_("Aprašymas"))
-    maturity_level = models.PositiveSmallIntegerField(
-        _("Brandos lygis"),
-        choices=MATURITY_LEVEL_CHOICES,
-    )
+    maturity_level = models.PositiveSmallIntegerField(_("Brandos lygis"), choices=MATURITY_LEVEL_CHOICES)
     link = models.URLField(_("Nuoroda"), help_text=_(
         "Nuoroda į vietą internete, kur pateikiami duomenys ar informacija "
         "apie duomenis."
