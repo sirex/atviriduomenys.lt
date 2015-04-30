@@ -1,5 +1,5 @@
-from adlt.core.factories import OrganizationFactory
+from adlt.core import factories as core_factories
 
 
 def populatedb():
-    OrganizationFactory.create_batch(10)
+    core_factories.AgentFactory.create_batch(10)

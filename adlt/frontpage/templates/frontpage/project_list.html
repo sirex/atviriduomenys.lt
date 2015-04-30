@@ -7,17 +7,17 @@
 <table class="table">
   <thead>
     <tr>
-      <th>{% trans "Tiekėjas" %}</th>
+      <th>{% trans "Projektas" %}</th>
       <th>{% trans "Brandos lygmuo" %}</th>
-      <th>{% trans "Projektų" %}</th>
+      <th>{% trans "Duomenų šaltiniai" %}</th>
     </tr>
   </thead>
   <tbody>
-    {% for agent in agents %}
+    {% for project in projects %}
     <tr>
-      <td>{{ agent.title }}</td>
-      <td>{{ agent.stars }}</td>
-      <td>{{ agent.projects }}</td>
+      <td>{{ project.title }}</td>
+      <td>{{ project.stars }}</td>
+      <td>{{ project.datasets }}</td>
     </tr>
     {% endfor %}
   </tbody>

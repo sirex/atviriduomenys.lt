@@ -7,16 +7,17 @@ import adlt.frontpage.services as frontpage_services
 class ServiceTests(django.test.TestCase):
     # pylint: disable=invalid-name
     def test_orgstats(self):
-        org1 = core_factories.OrganizationFactory(title='Org 1')
-        o1ds1 = core_factories.DatasetFactory(organization=org1, maturity_level=1)
-        o1ds2 = core_factories.DatasetFactory(organization=org1, maturity_level=2)
-        o1ds3 = core_factories.DatasetFactory(organization=org1, maturity_level=3)
+        org1 = core_factories.AgentFactory(title='Org 1')
+        o1ds1 = core_factories.DatasetFactory(agent=org1, maturity_level=1)
+        o1ds2 = core_factories.DatasetFactory(agent=org1, maturity_level=2)
+        o1ds3 = core_factories.DatasetFactory(agent=org1, maturity_level=3)
 
-        org2 = core_factories.OrganizationFactory(title='Org 2')
-        o2ds1 = core_factories.DatasetFactory(organization=org2, maturity_level=3)
-        core_factories.DatasetFactory(organization=org2, maturity_level=4)
+        org2 = core_factories.AgentFactory(title='Org 2')
+        o2ds1 = core_factories.DatasetFactory(agent=org2, maturity_level=3)
+        core_factories.DatasetFactory(agent=org2, maturity_level=4)
 
-        p1, p2, p3 = core_factories.ProjectFactory.create_batch(3)
+        org3 = core_factories.AgentFactory(title='Org 3')
+        p1, p2, p3 = core_factories.ProjectFactory.create_batch(3, agent=org3)
 
         p1.datasets.add(o1ds1)
         p1.datasets.add(o2ds1)

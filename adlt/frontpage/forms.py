@@ -7,12 +7,16 @@ import adlt.core.models as core_models
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = core_models.Project
-        fields = ('title', 'description', 'datasets_links')
+        fields = ('title', 'agent', 'description', 'datasets_links')
         widgets = {
             'description': forms.Textarea(attrs={'rows': 16}),
             'datasets': forms.Textarea(attrs={'rows': 5}),
         }
         help_texts = {
+            'agent': _(
+                'Organizacija arba individualus asmuo vykdantys arba planuojantys vykdyti projektą. Pasirinkite esamą '
+                'iš sąrašo arba įveskite naują organizacijos pavadinimą arba individualaus asmens vardą.'
+            ),
             'description': _(
                 "Apibūdinkite projektą. Galite naudoti "
                 "[Markdown](http://daringfireball.net/projects/markdown/syntax){:target=_blank} "
@@ -36,14 +40,20 @@ class DatasetForm(forms.ModelForm):
     class Meta:
         model = core_models.Dataset
         fields = (
-            'title', 'organization', 'maturity_level', 'link', 'description',
+            'title', 'agent', 'maturity_level', 'link', 'description',
         )
         widgets = {
             'description': forms.Textarea(attrs={'rows': 16}),
         }
+        help_texts = {
+            'agent': _(
+                'Organizacija arba individualus asmuo teikiantis duomenis. Pasirinkite esamą iš sąrašo arba įveskite '
+                'naują organizacijos pavadinimą arba individualaus asmens vardą.'
+            ),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['organization'].queryset = (
-            core_models.Organization.objects.all()
+        self.fields['agent'].queryset = (
+            core_models.Agent.objects.filter(individual=False, active=True)
         )

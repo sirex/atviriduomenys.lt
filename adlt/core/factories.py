@@ -5,11 +5,11 @@ from adlt.common.helpers.factories import fake
 import adlt.core.models as core_models
 
 
-class OrganizationFactory(factory.DjangoModelFactory):
+class AgentFactory(factory.DjangoModelFactory):
     title = factory.LazyAttribute(fake.company())
 
     class Meta:
-        model = core_models.Organization
+        model = core_models.Agent
 
 
 class DatasetFactory(factory.DjangoModelFactory):
