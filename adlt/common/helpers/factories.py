@@ -17,11 +17,11 @@ class FakerFactoryBoyWrapper(object):
         self.faker = faker.Factory.create()
 
     def __getattr__(self, name):
-        faker = getattr(self.faker, name)
+        faker_method = getattr(self.faker, name)
 
         def wrapper(*args, **kwargs):
             def func(obj=None):  # pylint: disable=unused-argument
-                return faker(*args, **kwargs)
+                return faker_method(*args, **kwargs)
             return func
 
         return wrapper
