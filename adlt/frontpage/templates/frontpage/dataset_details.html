@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load trans from i18n %}
+
+
+{% block content %}
+
+<h1>{{ dataset.title }}</h1>
+
+{% if projects %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>{% trans "Projektas" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for project in projects %}
+    <tr>
+      <td>{{ project.title }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

@@ -24,7 +24,7 @@ class ViewTests(WebTest):
         ])
 
     def test_create_dataset(self):
-        agent = core_factories.AgentFactory(title='Org 1', individual=False, active=True)
+        agent = core_factories.AgentFactory(title='Org 1', individual=False)
 
         resp = self.app.get('/datasets/create/')
         resp.form['title'] = 'My dataset'
@@ -38,3 +38,10 @@ class ViewTests(WebTest):
         self.assertEqual(list(core_models.Dataset.objects.values_list('slug', 'title', 'agent__title')), [
             ('my-dataset', 'My dataset', 'Org 1'),
         ])
+
+
+    def test_dataset_details(self):
+        agent = core_factories.AgentFactory(title='Org 1')
+        dataset = core_factories.DatasetFactory(title='My dataset', agent=agent)
+
+        self.app.get('/datasets/org-1/my-dataset/')

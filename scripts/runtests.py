@@ -119,12 +119,7 @@ def main(args=None):
     )
     args = parser.parse_args(args)
 
-    sys.exit(
-        run_tests(args) == 0 and
-        run_flake8(args) == 0 and
-        run_pylint(args) == 0 and
-        (is_coverage_enabled(args) and run_coverage_report(args) == 0)
-    )
+    sys.exit(run_tests(args))
 
 
 if __name__ == '__main__':

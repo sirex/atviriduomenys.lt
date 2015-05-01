@@ -29,8 +29,10 @@ def dataset_list(request):
 
 
 def dataset_details(request, agent_slug, dataset_slug):
+    dataset = get_object_or_404(core_models.Dataset, agent__slug=agent_slug, slug=dataset_slug)
     return render(request, 'frontpage/dataset_details.html', {
-        'dataset': get_object_or_404(core_models.Dataset, agent__slug=agent_slug, slug=dataset_slug),
+        'dataset': dataset,
+        'projects': dataset.project_set.all(),
     })
 
 

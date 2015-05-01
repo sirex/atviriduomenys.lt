@@ -1,6 +1,7 @@
 import autoslug
 
 from django.db import models
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -22,6 +23,7 @@ class Dataset(models.Model):
     USES_URIS = 4
     LINKED_DATA = 5
     MATURITY_LEVEL_CHOICES = (
+        (NO_DATA, _('0. Duomenys nėra pateikti')),
         (OPEN_LICENCE, _('1. Atvira licencija')),
         (STRUCTURED_DATA, _('2. Struktūruoti duomenys')),
         (OPEN_FORMAT, _('3. Atviras formatas')),
@@ -41,6 +43,9 @@ class Dataset(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('dataset-details', args=[self.agent.slug, self.slug])
 
 
 class Project(models.Model):
