@@ -1,5 +1,8 @@
 import autoslug
+from django_extensions.db.fields.json import JSONField
+from django_extensions.db.fields import CreationDateTimeField
 
+import django.contrib.auth.models as auth_models
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
@@ -31,9 +34,9 @@ class Dataset(models.Model):
         (LINKED_DATA, _('5. Susietieji duomenys')),
     )
 
+    agent = models.ForeignKey(Agent, verbose_name=_("Organizacija"), null=True)
     slug = autoslug.AutoSlugField(populate_from='title', unique_with='agent')
     title = models.CharField(_("Pavadinimas"), max_length=255)
-    agent = models.ForeignKey(Agent, verbose_name=_("Organizacija"))
     description = models.TextField(_("Aprašymas"))
     maturity_level = models.PositiveSmallIntegerField(_("Brandos lygis"), choices=MATURITY_LEVEL_CHOICES)
     link = models.URLField(_("Nuoroda"), help_text=_(
@@ -49,12 +52,29 @@ class Dataset(models.Model):
 
 
 class Project(models.Model):
+    agent = models.ForeignKey(Agent, verbose_name=_("Organizacija/Asmnuo"))
     slug = autoslug.AutoSlugField(populate_from='title', unique_with='agent')
     title = models.CharField(_("Pavadinimas"), max_length=255)
-    agent = models.ForeignKey(Agent, verbose_name=_("Organizacija/Asmnuo"))
     description = models.TextField(_("Aprašymas"))
     datasets_links = models.TextField(_("Duomenų šaltiniai"))
     datasets = models.ManyToManyField(Dataset)
 
     def __str__(self):
         return self.title
+
+
+class Queue(models.Model):
+    created = CreationDateTimeField()
+    completed = models.BooleanField(default=False)
+    user = models.ForeignKey(auth_models.User)
+    url = JSONField()  # Tuple: (<url name: str>, <args: tuple>, <kwargs: dict>).
+    data = JSONField()  # Initial form data.
+    message = models.TextField()
+
+    def __str__(self):
+        url, args, kwargs = self.url
+        return ' '.join([
+            url,
+            ' '.join(map(str, args)),
+            ' '.join('%s=%s' % (k, v) for k, v in kwargs.items()),
+        ])
