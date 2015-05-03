@@ -53,6 +53,7 @@ def save_dataset_form(request, form, agent):
     project = form.save(commit=False)
     project.agent = data['agent'] or create_agent_from_title(request, agent)
     project.save()
+    return project
 
 
 def save_project_form(request, form, agent):
@@ -66,6 +67,7 @@ def save_project_form(request, form, agent):
             user=request.user,
             url=['create-dataset', [], {}],
             data=get_dataset_params(link),
+            context={'project_id': project.pk},
             message=ugettext(
                 'Prašome pateikti daugiau informacijos apie duomenų šaltinį, kuris buvo priskirtas „%s“ projektui.' % (
                     project.title,

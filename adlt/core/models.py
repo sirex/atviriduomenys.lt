@@ -69,6 +69,7 @@ class Queue(models.Model):
     user = models.ForeignKey(auth_models.User)
     url = JSONField()  # Tuple: (<url name: str>, <args: tuple>, <kwargs: dict>).
     data = JSONField()  # Initial form data.
+    context = JSONField()  # Additional context data from sender.
     message = models.TextField()
 
     def __str__(self):

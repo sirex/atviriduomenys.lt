@@ -75,9 +75,11 @@ def dataset_form(request):
     if request.method == 'POST':
         form, agent = frontpage_helpers.get_agent_form(request.POST, frontpage_forms.DatasetForm)
         if form.is_valid():
-            frontpage_helpers.save_dataset_form(request, form, agent)
+            dataset = frontpage_helpers.save_dataset_form(request, form, agent)
 
             if queue:
+                project = core_models.Project.objects.get(pk=queue.context['project_id'])
+                project.datasets.add(dataset)
                 queue.completed = True
                 queue.save()
 
