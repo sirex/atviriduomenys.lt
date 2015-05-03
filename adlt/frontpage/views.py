@@ -39,6 +39,8 @@ def dataset_details(request, agent_slug, dataset_slug):
 
 
 def project_form(request):
+    form_title = ugettext('Pateikti naują projektą')
+
     if request.method == 'POST':
         form, agent = frontpage_helpers.get_agent_form(request.POST, frontpage_forms.ProjectForm)
         if form.is_valid():
@@ -54,17 +56,19 @@ def project_form(request):
         form = frontpage_forms.ProjectForm()
 
     return render(request, 'frontpage/project_form.html', {
-        'form': formrenderer.render(
-            request, form,
-            title=ugettext('Pateikti naują projektą'),
-            submit=ugettext('Pateikti')
-        ),
+        'form': formrenderer.render(request, form, title=form_title, submit=ugettext('Pateikti')),
     })
 
 
 def dataset_form(request):
+    title = ugettext('Pateikti naują duomenų šaltinį')
+    submit = ugettext('Pateikti')
+    description = ''
+
     if 'qref' in request.GET:
         queue = get_object_or_404(core_models.Queue, pk=request.GET['qref'], user=request.user, completed=False)
+        title = ugettext('Informacija apie duomenų šaltinį')
+        description = queue.message
     else:
         queue = None
 
@@ -88,9 +92,5 @@ def dataset_form(request):
         form = frontpage_forms.DatasetForm(initial=initial)
 
     return render(request, 'frontpage/dataset_form.html', {
-        'form': formrenderer.render(
-            request, form,
-            title=ugettext('Pateikti naują duomenų šaltinį'),
-            submit=ugettext('Pateikti')
-        ),
+        'form': formrenderer.render(request, form, title=title, submit=submit, description=description),
     })

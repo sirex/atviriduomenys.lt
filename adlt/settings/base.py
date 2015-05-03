@@ -38,10 +38,14 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = []
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': TEMPLATE_CONTEXT_PROCESSORS,
+        }
     },
 ]
 
@@ -106,6 +110,50 @@ INSTALLED_APPS += (
 INSTALLED_APPS += (
     'adlt.core',
     'adlt.website',
+    'adlt.accounts',
     'adlt.frontpage',
     'adlt.populatedb',
 )
+
+
+# django-allauth
+# http://django-allauth.readthedocs.org/
+
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS += [
+    'django.template.context_processors.request',
+    'allauth.socialaccount.context_processors.socialaccount',
+]
+
+INSTALLED_APPS += (
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.openid',
+    'allauth.socialaccount.providers.persona',
+)
+
+SORTED_AUTH_PROVIDERS = (
+    'persona',
+    'openid.google',
+    'openid.yahoo',
+)
+
+SOCIALACCOUNT_PROVIDERS = {
+    'openid': {
+        'SERVERS': [
+            dict(id='google', name='Google', openid_url='https://www.google.com/accounts/o8/id'),
+            dict(id='yahoo', name='Yahoo', openid_url='http://me.yahoo.com'),
+        ],
+    },
+    'persona': {
+        'AUDIENCE': '127.0.0.1',
+    },
+}

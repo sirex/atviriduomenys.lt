@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load trans from i18n %}
+{% load providers_media_js from socialaccount %}
+
+
+{% block content %}
+
+<h1>{% trans "Sign In" %}</h1>
+
+<ul>
+  {% for provider in auth_providers %}
+  <li><a href="{{ provider.url }}">{{ provider.name }}</a></li>
+  {% endfor %}
+  <li>
+    <form method="post" action="{% url 'openid_login' %}">
+      {% csrf_token %}
+      <div class="input-group input-group-sm">
+        <span class="input-group-addon">https://launchpad.net/~</span>
+        <input name="openid" type="text" class="form-control" placeholder="Launchpat.net user name...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="submit">Sign in</button>
+        </span>
+      </div>
+    </form>
+  </li>
+  <li>
+    <form method="post" action="{% url 'openid_login' %}">
+      {% csrf_token %}
+      <div class="input-group input-group-sm">
+        <span class="input-group-addon">@</span>
+        <input name="openid" type="text" class="form-control" placeholder="OpenID URL...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="submit">Sign in</button>
+        </span>
+      </div>
+    </form>
+  </li>
+</ul>
+
+{% providers_media_js %}
+{% endblock %}

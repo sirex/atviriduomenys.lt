@@ -14,6 +14,7 @@ setup(
         'django-extensions',
         'django-webtest',
         'django-autoslug',
+        'django-allauth',
         'factory_boy',
         'fake-factory',
         'unidecode',

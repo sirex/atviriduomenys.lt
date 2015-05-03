@@ -3,8 +3,8 @@ from django.conf.urls import url, include
 
 urlpatterns = [
     url(r'', include('adlt.frontpage.urls')),
+    url(r'^accounts/', include('adlt.accounts.urls')),
 ]
-
 
 if settings.DEBUG:
     import debug_toolbar

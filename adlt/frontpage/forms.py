@@ -1,4 +1,5 @@
 from django import forms
+from django.db import models
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
@@ -7,7 +8,21 @@ import adlt.common.widgets as common_widgets
 import adlt.frontpage.services as frontpage_services
 
 
+class ModelTypeaheadField(forms.ModelChoiceField):
+    widget = common_widgets.TypeaheadWidget(reverse_lazy('agent-list-json'))
+
+    def prepare_value(self, value):
+        if isinstance(value, models.Model):
+            return value
+        elif value:
+            return self.queryset.get(pk=value)
+        else:
+            return None
+
+
 class ProjectForm(forms.ModelForm):
+    agent = ModelTypeaheadField(core_models.Agent.objects.all())
+
     class Meta:
         model = core_models.Project
         fields = ('title', 'agent', 'description', 'datasets_links')
@@ -44,13 +59,14 @@ class ProjectForm(forms.ModelForm):
 
 
 class DatasetForm(forms.ModelForm):
+    agent = ModelTypeaheadField(core_models.Agent.objects.all())
+
     class Meta:
         model = core_models.Dataset
         fields = (
             'title', 'agent', 'maturity_level', 'link', 'description',
         )
         widgets = {
-            'agent': common_widgets.TypeaheadWidget(reverse_lazy('agent-list-json')),
             'description': forms.Textarea(attrs={'rows': 16}),
         }
         help_texts = {
@@ -59,7 +75,3 @@ class DatasetForm(forms.ModelForm):
                 "naują organizacijos pavadinimą arba individualaus asmens vardą."
             ),
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['agent'].queryset = core_models.Agent.objects.all()

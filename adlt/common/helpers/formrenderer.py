@@ -7,24 +7,21 @@ from django.utils.translation import ugettext
 
 
 class Bootstrap3(object):
-    def __init__(self, request, form: django.forms.Form, title=None,
-                 submit=ugettext('Submit')):
+    def __init__(self, request, form: django.forms.Form, title=None, submit=ugettext('Submit'), description=''):
         self.request = request
         self.form = form
         self.title = title
         self.submit = submit
+        self.description = description
         self.doc, self.tag, self.text = yattag.Doc().tagtext()
 
     def csrf_token(self):
         csrf_token = csrf.get_token(self.request)
         if csrf_token and csrf_token != 'NOTPROVIDED':
-            self.doc.stag('input', type='hidden', name='csrfmiddlewaretoken',
-                          value=csrf_token)
+            self.doc.stag('input', type='hidden', name='csrfmiddlewaretoken', value=csrf_token)
 
     def markdown(self, text: str):
-        self.doc.asis(markdown.markdown(text, extensions=[
-            'markdown.extensions.attr_list',
-        ]))
+        self.doc.asis(markdown.markdown(text, extensions=['markdown.extensions.attr_list']))
 
     def errors(self, errors):
         if errors:
@@ -39,9 +36,7 @@ class Bootstrap3(object):
 
     def label(self, field):
         suffix = '*' if field.field.required else ''
-        self.doc.asis(field.label_tag(label_suffix=suffix, attrs={
-            'class': 'col-sm-2 control-label',
-        }))
+        self.doc.asis(field.label_tag(label_suffix=suffix, attrs={'class': 'col-sm-2 control-label'}))
 
     def field(self, field: django.forms.Field):
         classes = ' has-error' if field.errors else ''
@@ -65,6 +60,10 @@ class Bootstrap3(object):
                 with self.tag('div', klass='col-sm-offset-2 col-sm-10'):
                     with self.tag('h1'):
                         self.text(str(self.title))
+            if self.description:
+                with self.tag('div', klass='col-sm-offset-2 col-sm-10 alert alert-info', role='alert'):
+                    # with self.tag('div', klass='alert alert-info', role='alert'):
+                    self.markdown(str(self.description))
             self.csrf_token()
             self.errors(self.form.non_field_errors())
             for field in self.form:
