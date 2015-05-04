@@ -6,6 +6,7 @@ include
 lib
 parts
 var
+tags
 .ropeproject
 .coverage
 __pycache__

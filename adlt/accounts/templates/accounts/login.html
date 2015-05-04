@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load trans from i18n %}
+{% load static from staticfiles %}
+{% load providers_media_js from socialaccount %}
+
+
+{% block content %}
+
+<h1>{% trans "Prisijungti" %}</h1>
+
+
+<div class="row">
+  <div class="col-md-4">
+    <p>{% trans 'Nurodykite savo <a href="http://openidexplained.com/">OpenID</a> adresą:' %}</p>
+    {% for provider in openid_providers %}
+    <div class="openid-input-line">
+      <form id="openid-{{ provider.name }}" method="post">
+        {% csrf_token %}
+        <div class="form-group{% if provider.errors %} has-error{% endif %}">
+          <div class="input-group input-group-sm">
+            <span class="input-group-addon"><img src="{% static 'auth/openid-icon.png'%}"> {{ provider.url }}</span>
+            <input name="openid" type="text" class="form-control" placeholder="OpenID URL...">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit" name="login" value="{{ provider.name }}">{% trans "Prisijungti" %}</button>
+            </span>
+          </div>
+          {% if provider.errors %}
+          <div class="help-block">
+            {% for error in provider.errors %}
+            <p class="text-danger">{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+    {% endfor %}
+
+    <!--
+    <div class="openid-input-line">
+      <form id="openid" method="post" action="{% url 'openid_login' %}">
+        {% csrf_token %}
+        <div class="input-group input-group-sm">
+          <span class="input-group-addon"><img src="{% static 'auth/openid-icon.png'%}"></span>
+          <input name="openid" type="text" class="form-control" placeholder="OpenID URL...">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="submit" name="login" value="openid">{% trans "Prisijungti" %}</button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    <div class="openid-input-line">
+      <form id="openid-lp" method="post" action="{% url 'openid_login' %}">
+        {% csrf_token %}
+        <div class="input-group input-group-sm">
+          <span class="input-group-addon"><img src="{% static 'auth/openid-icon.png'%}"> https://launchpad.net/~</span>
+          <input name="openid" type="text" class="form-control" placeholder="Launchpat.net user name...">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="submit" name="login" value="lp">{% trans "Prisijungti" %}</button>
+          </span>
+        </div>
+      </form>
+    </div>
+    -->
+  </div>
+
+  <div class="col-md-8">
+    <p>{% trans "arba pasirinkite vieną iš siūlomų autorizacijos tiekėjų:" %}</p>
+    <ul class="auth-providers">
+      {% for provider in auth_providers %}
+      {% if provider.logo %}
+      <li><a href="{{ provider.url }}"><img src="{{ provider.logo }}"></a></li>
+      {% else %}
+      <li><a href="{{ provider.url }}">{{ provider.name }}</a></li>
+      {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% providers_media_js %}
+{% endblock %}

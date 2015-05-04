@@ -2,11 +2,9 @@ import importlib
 
 from django.conf.urls import url, include
 
-import allauth.account.views
 import allauth.socialaccount.providers as allauth_providers
 
 import adlt.accounts.views as accounts_views
-
 
 
 def get_provider_urls(provider):
@@ -19,7 +17,8 @@ def get_provider_urls(provider):
 
 
 urlpatterns = [
-    url(r'^login/$', accounts_views.LoginView.as_view(), name='accounts-login'),
+    url(r'^login/$', accounts_views.login, name='accounts_login'),
+    url(r'^logout/$', accounts_views.logout, name='accounts_logout'),
     url(r'', include('allauth.socialaccount.urls')),
 ]
 

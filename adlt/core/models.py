@@ -37,9 +37,9 @@ class Dataset(models.Model):
     agent = models.ForeignKey(Agent, verbose_name=_("Organizacija"), null=True)
     slug = autoslug.AutoSlugField(populate_from='title', unique_with='agent')
     title = models.CharField(_("Pavadinimas"), max_length=255)
-    description = models.TextField(_("Aprašymas"))
+    description = models.TextField(_("Aprašymas"), blank=True)
     maturity_level = models.PositiveSmallIntegerField(_("Brandos lygis"), choices=MATURITY_LEVEL_CHOICES)
-    link = models.URLField(_("Nuoroda"), help_text=_(
+    link = models.URLField(_("Nuoroda"), blank=True, help_text=_(
         "Nuoroda į vietą internete, kur pateikiami duomenys ar informacija "
         "apie duomenis."
     ))

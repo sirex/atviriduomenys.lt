@@ -141,9 +141,14 @@ INSTALLED_APPS += (
 )
 
 SORTED_AUTH_PROVIDERS = (
-    'persona',
-    'openid.google',
-    'openid.yahoo',
+    ('persona', STATIC_URL + 'auth/persona.png'),
+    ('openid.google', STATIC_URL + 'auth/google.png'),
+    ('openid.yahoo', STATIC_URL + 'auth/yahoo.png'),
+)
+
+SORTED_OPENID_PROVIDERS = (
+    dict(name='openid', url='', pattern=''),
+    dict(name='lp', url='https://launchpad.net/~', pattern='https://launchpad.net/~%s'),
 )
 
 SOCIALACCOUNT_PROVIDERS = {

@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
+from django.contrib.auth.decorators import login_required
 
 import adlt.core.models as core_models
 import adlt.frontpage.services as frontpage_services
@@ -38,6 +39,7 @@ def dataset_details(request, agent_slug, dataset_slug):
     })
 
 
+@login_required
 def project_form(request):
     form_title = ugettext('Pateikti naują projektą')
 
@@ -60,6 +62,7 @@ def project_form(request):
     })
 
 
+@login_required
 def dataset_form(request):
     title = ugettext('Pateikti naują duomenų šaltinį')
     submit = ugettext('Pateikti')

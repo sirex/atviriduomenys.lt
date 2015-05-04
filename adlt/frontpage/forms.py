@@ -5,7 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 
 import adlt.core.models as core_models
 import adlt.common.widgets as common_widgets
-import adlt.frontpage.services as frontpage_services
 
 
 class ModelTypeaheadField(forms.ModelChoiceField):
@@ -21,21 +20,19 @@ class ModelTypeaheadField(forms.ModelChoiceField):
 
 
 class ProjectForm(forms.ModelForm):
-    agent = ModelTypeaheadField(core_models.Agent.objects.all())
+    agent = ModelTypeaheadField(core_models.Agent.objects.all(), label=_('Organizacija/Asmuo'), help_text=_(
+        'Organizacija arba individualus asmuo vykdantis arba planuojantis vykdyti projektą. Pasirinkite esamą '
+        'iš sąrašo arba įveskite naują organizacijos pavadinimą arba individualaus asmens vardą.'
+    ))
 
     class Meta:
         model = core_models.Project
         fields = ('title', 'agent', 'description', 'datasets_links')
         widgets = {
-            'agent': common_widgets.TypeaheadWidget(reverse_lazy('agent-list-json')),
             'description': forms.Textarea(attrs={'rows': 16}),
             'datasets': forms.Textarea(attrs={'rows': 5}),
         }
         help_texts = {
-            'agent': _(
-                'Organizacija arba individualus asmuo vykdantis arba planuojantis vykdyti projektą. Pasirinkite esamą '
-                'iš sąrašo arba įveskite naują organizacijos pavadinimą arba individualaus asmens vardą.'
-            ),
             'description': _(
                 "Apibūdinkite projektą. Galite naudoti "
                 "[Markdown](http://daringfireball.net/projects/markdown/syntax){:target=_blank} žymes."
@@ -59,7 +56,10 @@ class ProjectForm(forms.ModelForm):
 
 
 class DatasetForm(forms.ModelForm):
-    agent = ModelTypeaheadField(core_models.Agent.objects.all())
+    agent = ModelTypeaheadField(core_models.Agent.objects.all(), label=_('Organizacija/Asmuo'), help_text=_(
+        "Organizacija arba individualus asmuo teikiantis duomenis. Pasirinkite esamą iš sąrašo arba įveskite "
+        "naują organizacijos pavadinimą arba individualaus asmens vardą."
+    ))
 
     class Meta:
         model = core_models.Dataset
@@ -70,8 +70,8 @@ class DatasetForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'rows': 16}),
         }
         help_texts = {
-            'agent': _(
-                "Organizacija arba individualus asmuo teikiantis duomenis. Pasirinkite esamą iš sąrašo arba įveskite "
-                "naują organizacijos pavadinimą arba individualaus asmens vardą."
+            'description': _(
+                "Apibūdinkite projektą. Galite naudoti "
+                "[Markdown](http://daringfireball.net/projects/markdown/syntax){:target=_blank} žymes."
             ),
         }

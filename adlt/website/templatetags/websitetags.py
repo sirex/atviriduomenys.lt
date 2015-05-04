@@ -11,7 +11,7 @@ register = template.Library()
 def topmenu(context):
     current = context.request.resolver_match.url_name
     doc, tag, text = yattag.Doc().tagtext()
-    with tag('ul', klass='nav nav-pills'):
+    with tag('ul', klass='nav navbar-nav top-menu'):
         for item in website_menus.menus['topmenu']:
             is_active = current == item.name
             classes = 'active' if is_active else ''

@@ -4,6 +4,14 @@
 
 {% block content %}
 
+<div class="row">
+  <div class="pull-right well">
+    <a href="{% url "create-dataset" %}" class="btn btn-success btn-lg">{% trans "Pateikti naują duomenų šaltinį" %}</a>
+    <a href="{% url "create-project" %}" class="btn btn-success btn-lg">{% trans "Pateikti naują projektą" %}</a>
+  </div>
+</div>
+
+
 <table class="table">
   <thead>
     <tr>
