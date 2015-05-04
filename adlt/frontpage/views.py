@@ -36,6 +36,16 @@ def dataset_details(request, agent_slug, dataset_slug):
     return render(request, 'frontpage/dataset_details.html', {
         'dataset': dataset,
         'projects': dataset.project_set.all(),
+        'active_topmenu_item': 'dataset-list',
+    })
+
+
+def project_details(request, agent_slug, project_slug):
+    project = get_object_or_404(core_models.Project, agent__slug=agent_slug, slug=project_slug)
+    return render(request, 'frontpage/project_details.html', {
+        'project': project,
+        'datasets': project.datasets.all(),
+        'active_topmenu_item': 'project-list',
     })
 
 

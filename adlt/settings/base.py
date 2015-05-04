@@ -109,6 +109,7 @@ INSTALLED_APPS += (
 
 INSTALLED_APPS += (
     'adlt.core',
+    'adlt.common',
     'adlt.website',
     'adlt.accounts',
     'adlt.frontpage',

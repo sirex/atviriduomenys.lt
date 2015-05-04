@@ -6,7 +6,7 @@ import adlt.core.models as core_models
 def orgrating():
     return (
         core_models.Agent.objects.
-        values('title').
+        values('slug', 'title').
         annotate(
             stars=Avg('dataset__maturity_level'),
             usage=Count('dataset__project'),
@@ -20,7 +20,7 @@ def orgrating():
 def project_rating():
     return (
         core_models.Project.objects.
-        values('title').
+        values('agent__slug', 'slug', 'title').
         annotate(
             stars=Avg('datasets__maturity_level'),
             datasets=Count('datasets'),
@@ -32,7 +32,7 @@ def project_rating():
 def dataset_rating():
     return (
         core_models.Dataset.objects.
-        values('title', 'maturity_level').
+        values('agent__slug', 'slug', 'title', 'maturity_level').
         annotate(projects=Count('project')).
         order_by('-projects', 'title')
     )

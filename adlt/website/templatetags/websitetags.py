@@ -9,7 +9,11 @@ register = template.Library()
 
 @register.simple_tag(takes_context=True)
 def topmenu(context):
-    current = context.request.resolver_match.url_name
+    if 'active_topmenu_item' in context:
+        current = context['active_topmenu_item']
+    else:
+        current = context.request.resolver_match.url_name
+
     doc, tag, text = yattag.Doc().tagtext()
     with tag('ul', klass='nav navbar-nav top-menu'):
         for item in website_menus.menus['topmenu']:

@@ -1,10 +1,15 @@
 {% extends "base.html" %}
 {% load trans from i18n %}
+{% load markdown from adltcommon %}
 
 
 {% block content %}
 
 <h1>{{ dataset.title }}</h1>
+
+{{ dataset.description|markdown }}
+
+<h2>Projektai naudojantys šį duomenų šaltinį</h2>
 
 {% if projects %}
 <table class="table">
@@ -16,7 +21,7 @@
   <tbody>
     {% for project in projects %}
     <tr>
-      <td>{{ project.title }}</td>
+      <td><a href="{{ project.get_absolute_url }}">{{ project.title }}</a></td>
     </tr>
     {% endfor %}
   </tbody>

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load trans from i18n %}
+{% load markdown from adltcommon %}
+
+
+{% block content %}
+
+<h1>{{ project.title }}</h1>
+
+{{ project.description|markdown }}
+
+<h2>{% trans "Naudojami duomenų šaltiniai" %}</h2>
+
+{% if datasets %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>{% trans "Dataset" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for dataset in datasets %}
+    <tr>
+      <td><a href="{{ dataset.get_absolute_url }}">{{ dataset }}</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

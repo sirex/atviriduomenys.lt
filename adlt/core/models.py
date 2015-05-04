@@ -62,6 +62,9 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('project-details', args=[self.agent.slug, self.slug])
+
 
 class Queue(models.Model):
     created = CreationDateTimeField()
