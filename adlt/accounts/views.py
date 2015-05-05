@@ -1,8 +1,13 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import auth
+from django.utils.translation import ugettext
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 import adlt.accounts.helpers.allauth as allauth_helpers
+import adlt.accounts.forms as accounts_forms
+from adlt.common.helpers import formrenderer
 
 
 def login(request):
@@ -19,3 +24,18 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('index')
+
+
+@login_required
+def settings(request):
+    if request.method == 'POST':
+        form = accounts_forms.SettingsForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, ugettext("Nustatymai buvo sėkimingai išsaugoti."))
+            return redirect('accounts_settings')
+    else:
+        form = accounts_forms.SettingsForm(instance=request.user)
+    return render(request, 'accounts/settings.html', {
+        'form': formrenderer.render(request, form, title=ugettext("Profilio nustatymai"), submit=ugettext("Saugoti")),
+    })

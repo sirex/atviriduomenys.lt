@@ -35,34 +35,6 @@
       </form>
     </div>
     {% endfor %}
-
-    <!--
-    <div class="openid-input-line">
-      <form id="openid" method="post" action="{% url 'openid_login' %}">
-        {% csrf_token %}
-        <div class="input-group input-group-sm">
-          <span class="input-group-addon"><img src="{% static 'auth/openid-icon.png'%}"></span>
-          <input name="openid" type="text" class="form-control" placeholder="OpenID URL...">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="submit" name="login" value="openid">{% trans "Prisijungti" %}</button>
-          </span>
-        </div>
-      </form>
-    </div>
-
-    <div class="openid-input-line">
-      <form id="openid-lp" method="post" action="{% url 'openid_login' %}">
-        {% csrf_token %}
-        <div class="input-group input-group-sm">
-          <span class="input-group-addon"><img src="{% static 'auth/openid-icon.png'%}"> https://launchpad.net/~</span>
-          <input name="openid" type="text" class="form-control" placeholder="Launchpat.net user name...">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="submit" name="login" value="lp">{% trans "Prisijungti" %}</button>
-          </span>
-        </div>
-      </form>
-    </div>
-    -->
   </div>
 
   <div class="col-md-8">
