@@ -1,6 +1,6 @@
 import autoslug
 from django_extensions.db.fields.json import JSONField
-from django_extensions.db.fields import CreationDateTimeField
+from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
 
 import django.contrib.auth.models as auth_models
 from django.db import models
@@ -9,6 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Agent(models.Model):
+    created = CreationDateTimeField()
+    modified = ModificationDateTimeField()
+    user = models.ForeignKey(auth_models.User)
     slug = autoslug.AutoSlugField(populate_from='title', unique=True)
     title = models.CharField(_("Pavadinimas/Vardas"), max_length=255)
     individual = models.BooleanField(default=True)
@@ -34,6 +37,9 @@ class Dataset(models.Model):
         (LINKED_DATA, _('5. Susietieji duomenys')),
     )
 
+    created = CreationDateTimeField()
+    modified = ModificationDateTimeField()
+    user = models.ForeignKey(auth_models.User)
     agent = models.ForeignKey(Agent, verbose_name=_("Organizacija"), null=True)
     slug = autoslug.AutoSlugField(populate_from='title', unique_with='agent')
     title = models.CharField(_("Pavadinimas"), max_length=255)
@@ -52,6 +58,9 @@ class Dataset(models.Model):
 
 
 class Project(models.Model):
+    created = CreationDateTimeField()
+    modified = ModificationDateTimeField()
+    user = models.ForeignKey(auth_models.User)
     agent = models.ForeignKey(Agent, verbose_name=_("Organizacija/Asmnuo"))
     slug = autoslug.AutoSlugField(populate_from='title', unique_with='agent')
     title = models.CharField(_("Pavadinimas"), max_length=255)

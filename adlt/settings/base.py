@@ -109,6 +109,12 @@ INSTALLED_APPS += (
 
 # App settings
 
+WEBSITE_URL = 'http://atviriduomenys.lt/'
+
+MIDDLEWARE_CLASSES += (
+    'adlt.website.middlewares.WebsiteURLCheckMiddleware',
+)
+
 INSTALLED_APPS += (
     'adlt.core',
     'adlt.common',

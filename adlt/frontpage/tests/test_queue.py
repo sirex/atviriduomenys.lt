@@ -3,6 +3,7 @@ import django_webtest
 import django.contrib.auth.models as auth_models
 
 import adlt.core.models as core_models
+import adlt.core.factories as core_factories
 import adlt.frontpage.services as frontpage_services
 
 
@@ -31,6 +32,12 @@ class ViewTests(django_webtest.WebTest):
             ('my-project', 'My project', 'Org 1'),
         ])
 
+        project = core_models.Project.objects.get(slug='my-project')
+        self.assertEqual(project.datasets_links, (
+            'New dataset\n'
+            'http://example.com/dataset/1\n'
+        ))
+
         # First dataset form
         resp = resp.follow()
         self.assertEqual(resp.form['title'].value, 'New dataset')
@@ -46,6 +53,12 @@ class ViewTests(django_webtest.WebTest):
         self.assertEqual(list(core_models.Dataset.objects.values_list('slug', 'title', 'agent__title')), [
             ('new-dataset', 'New dataset', 'Org 2'),
         ])
+
+        project = core_models.Project.objects.get(slug='my-project')
+        self.assertEqual(project.datasets_links, (
+            'http://localhost:80/datasets/org-2/new-dataset/\n'
+            'http://example.com/dataset/1\n'
+        ))
 
         # Second dataset form
         resp = resp.follow()
@@ -63,4 +76,33 @@ class ViewTests(django_webtest.WebTest):
         self.assertEqual(list(core_models.Dataset.objects.values_list('slug', 'title', 'agent__title')), [
             ('new-dataset', 'New dataset', 'Org 2'),
             ('dataset-2', 'Dataset 2', 'Org 2'),
+        ])
+
+        project = core_models.Project.objects.get(slug='my-project')
+        self.assertEqual(project.datasets_links, (
+            'http://localhost:80/datasets/org-2/new-dataset/\n'
+            'http://localhost:80/datasets/org-2/dataset-2/\n'
+        ))
+        self.assertEqual(project.user.username, user.username)
+
+        # Update existing project
+        agent = core_factories.AgentFactory(title='Agent 7')
+        dataset = core_factories.DatasetFactory(title='Dataset 14', agent=agent)
+        resp = self.app.get(project.get_absolute_url() + 'update/', user='u1')
+        resp.form['title'] = 'My project (updated)'
+        resp.form['datasets_links'] = (
+            'http://localhost:80/datasets/org-2/dataset-2/\n'
+            'http://localhost:80%s\n' % dataset.get_absolute_url()
+        )
+        resp = resp.form.submit()
+
+        self.assertEqual(resp.status_int, 302)
+        self.assertEqual(qref(), None)
+        self.assertEqual(resp.location, 'http://localhost:80/projects/org-1/my-project/')
+
+        project = core_models.Project.objects.get(slug='my-project')
+        dataset_urls = [ds.get_absolute_url() for ds in project.datasets.all()]
+        self.assertEqual(dataset_urls, [
+            '/datasets/org-2/dataset-2/',
+            dataset.get_absolute_url(),
         ])

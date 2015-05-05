@@ -1,4 +1,5 @@
 import django.http
+from django.conf import settings
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
@@ -50,6 +51,36 @@ def project_details(request, agent_slug, project_slug):
 
 
 @login_required
+def project_update(request, agent_slug, project_slug):
+    if request.user.is_superuser:
+        project = get_object_or_404(core_models.Project, agent__slug=agent_slug, slug=project_slug)
+    else:
+        project = get_object_or_404(core_models.Project, agent__slug=agent_slug, slug=project_slug, user=request.user)
+
+    if request.method == 'POST':
+        form, agent = frontpage_helpers.get_agent_form(request.POST, frontpage_forms.ProjectForm, instance=project)
+        if form.is_valid():
+            frontpage_helpers.save_project_form(request, form, agent)
+
+            queue = frontpage_services.get_next_from_queue(request.user)
+            if queue:
+                url, args, kwargs = queue.url
+                return django.http.HttpResponseRedirect(reverse(url, args=args, kwargs=kwargs) + '?qref=%d' % queue.pk)
+            else:
+                return redirect(project)
+    else:
+        # Always reset datasets_links to avoid duplicates in queue if queue is not yet completed.
+        project.datasets_links = ''.join([
+            settings.WEBSITE_URL.rstrip('/') + ds.get_absolute_url() + '\n' for ds in project.datasets.all()
+        ])
+        form = frontpage_forms.ProjectForm(instance=project)
+
+    return render(request, 'frontpage/project_form.html', {
+        'form': formrenderer.render(request, form, title=project.title, submit=ugettext('Pateikti')),
+    })
+
+
+@login_required
 def project_form(request):
     form_title = ugettext('Pateikti naują projektą')
 
@@ -93,6 +124,10 @@ def dataset_form(request):
             if queue:
                 project = core_models.Project.objects.get(pk=queue.context['project_id'])
                 project.datasets.add(dataset)
+                project.datasets_links = frontpage_helpers.update_project_links(
+                    project.datasets_links, queue.context['link'], dataset,
+                )
+                project.save()
                 queue.completed = True
                 queue.save()
 

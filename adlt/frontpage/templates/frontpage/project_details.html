@@ -5,6 +5,12 @@
 
 {% block content %}
 
+<div class="pull-right">
+  <a href="{% url 'project-update' project.agent.slug project.slug %}" class="btn btn-default">
+    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans "Keisti" %}
+  </a>
+</div>
+
 <h1>{{ project.title }}</h1>
 
 {{ project.description|markdown }}

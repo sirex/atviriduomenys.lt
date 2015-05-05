@@ -1,11 +1,24 @@
 import factory
 
-from adlt.common.helpers.factories import fake
+import django.contrib.auth.models as auth_models
 
 import adlt.core.models as core_models
+from adlt.common.helpers.factories import fake
+
+
+class UserFactory(factory.DjangoModelFactory):
+    username = 'u1'
+    first_name = 'U1'
+    last_name = 'User'
+    is_superuser = False
+
+    class Meta:
+        model = auth_models.User
+        django_get_or_create = ('username',)
 
 
 class AgentFactory(factory.DjangoModelFactory):
+    user = factory.SubFactory(UserFactory)
     title = factory.LazyAttribute(fake.company())
     active = True
 
@@ -14,6 +27,7 @@ class AgentFactory(factory.DjangoModelFactory):
 
 
 class DatasetFactory(factory.DjangoModelFactory):
+    user = factory.SubFactory(UserFactory)
     title = factory.LazyAttribute(fake.company())
     maturity_level = core_models.Dataset.OPEN_FORMAT
 
@@ -22,6 +36,7 @@ class DatasetFactory(factory.DjangoModelFactory):
 
 
 class ProjectFactory(factory.DjangoModelFactory):
+    user = factory.SubFactory(UserFactory)
     title = factory.LazyAttribute(fake.company())
 
     class Meta:

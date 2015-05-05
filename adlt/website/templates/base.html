@@ -27,7 +27,10 @@
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav pull-right">
             {% if request.user.is_authenticated %}
-            <li><a href="{% url 'accounts_settings' %}"><strong>{% username request.user %}</strong></a></li>
+            <li><a href="{% url 'accounts_settings' %}">
+              <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+              <strong>{% username request.user %}</strong>
+            </a></li>
             <li><a href="{% url 'accounts_logout' %}">{% trans "Atsijungti" %}</a></li>
             {% else %}
             <li><a href="{% url 'accounts_login' %}">{% trans "Prisijungti" %}</a></li>
