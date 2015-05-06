@@ -72,7 +72,7 @@ class ViewTests(django_webtest.WebTest):
 
         self.assertEqual(resp.status_int, 302)
         self.assertEqual(qref(), None)
-        self.assertEqual(resp.location, 'http://localhost:80/')
+        self.assertEqual(resp.location, 'http://localhost:80/projects/org-1/my-project/')
         self.assertEqual(list(core_models.Dataset.objects.values_list('slug', 'title', 'agent__title')), [
             ('new-dataset', 'New dataset', 'Org 2'),
             ('dataset-2', 'Dataset 2', 'Org 2'),

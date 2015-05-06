@@ -9,7 +9,7 @@ import adlt.core.factories as core_factories
 class ViewTests(django_webtest.WebTest):
     def setUp(self):
         super().setUp()
-        auth_models.User.objects.create_user('u1')
+        self.user = auth_models.User.objects.create_user('u1')
 
     def test_index(self):
         self.app.get('/', user='u1')
@@ -58,9 +58,26 @@ class ViewTests(django_webtest.WebTest):
             ('my-dataset', 'My dataset', 'Org 1'),
         ])
 
-
     def test_dataset_details(self):
         agent = core_factories.AgentFactory(title='Org 1')
-        dataset = core_factories.DatasetFactory(title='My dataset', agent=agent)
+        core_factories.DatasetFactory(title='My dataset', agent=agent)
 
         self.app.get('/datasets/org-1/my-dataset/', user='u1')
+
+    def test_dataset_update(self):
+        agent = core_factories.AgentFactory(title='Org 1')
+        core_factories.DatasetFactory(title='My dataset', agent=agent, user=self.user)
+
+        resp = self.app.get('/datasets/org-1/my-dataset/update/', user='u1')
+        resp.form['title'] = 'My dataset (updated)'
+        resp.form['agent'] = agent.pk
+        resp.form['maturity_level'] = '2'
+        resp.form['link'] = 'http://example.com/updated/'
+        resp = resp.form.submit()
+
+        self.assertEqual(resp.status_int, 302)
+
+        dataset = core_models.Dataset.objects.get(agent__slug='org-1', slug='my-dataset')
+        self.assertEqual(dataset.title, 'My dataset (updated)')
+        self.assertEqual(dataset.maturity_level, 2)
+        self.assertEqual(dataset.link, 'http://example.com/updated/')

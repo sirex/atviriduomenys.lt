@@ -5,6 +5,14 @@
 
 {% block content %}
 
+{% if can_update %}
+<div class="pull-right">
+  <a href="{% url 'dataset-update' dataset.agent.slug dataset.slug %}" class="btn btn-default">
+    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans "Keisti" %}
+  </a>
+</div>
+{% endif %}
+
 <h1>{{ dataset.title }}</h1>
 
 {{ dataset.description|markdown }}

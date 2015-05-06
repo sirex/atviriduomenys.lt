@@ -113,3 +113,5 @@ def save_project_form(request, form, agent):
     # Delete datasets that are no longer in dataset links
     for dataset in project.datasets.exclude(id__in=dataset_ids):
         project.datasets.remove(dataset)
+
+    return project
