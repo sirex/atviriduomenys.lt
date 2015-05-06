@@ -61,6 +61,13 @@ DATABASES = {
     }
 }
 
+MIGRATION_MODULES = {
+    'account': 'adlt.core.migrations.account',
+    'core': 'adlt.core.migrations.core',
+    'openid': 'adlt.core.migrations.openid',
+    'socialaccount': 'adlt.core.migrations.socialaccount',
+}
+
 
 # Static assets, see config/assets.cfg
 # https://pypi.python.org/pypi/hexagonit.recipe.download

@@ -16,4 +16,6 @@ urlpatterns = [
     url(r'^datasets/(?P<agent_slug>%s)/(?P<dataset_slug>%s)/$' % (slug, slug), views.dataset_details, name='dataset-details'),
     url(r'^datasets/(?P<agent_slug>%s)/(?P<dataset_slug>%s)/update/$' % (slug, slug), views.dataset_update, name='dataset-update'),
     url(r'^agents.json$', api.agent_list, name='agent-list-json'),
+    url(r'^likes/(?P<object_type>[a-z]+)/(?P<object_id>\d+)/like/$', api.like, name='like'),
+    url(r'^likes/(?P<object_type>[a-z]+)/(?P<object_id>\d+)/unlike/$', api.unlike, name='unlike'),
 ]

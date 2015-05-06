@@ -6,13 +6,16 @@
 
 {% block content %}
 
-{% if can_update %}
 <div class="pull-right">
+  <a href="#" class="btn btn-default" data-action="" data-label="{% trans "Nebepatinka" %}">
+    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> {% trans "Patinka" %}
+  </a>
+  {% if can_update %}
   <a href="{% url 'project-update' project.agent.slug project.slug %}" class="btn btn-default">
     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans "Keisti" %}
   </a>
+  {% endif %}
 </div>
-{% endif %}
 
 <h1>{{ project.title }}</h1>
 

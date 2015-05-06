@@ -49,6 +49,7 @@ class Dataset(models.Model):
         "Nuoroda į vietą internete, kur pateikiami duomenys ar informacija "
         "apie duomenis."
     ))
+    likes = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -67,12 +68,24 @@ class Project(models.Model):
     description = models.TextField(_("Aprašymas"))
     datasets_links = models.TextField(_("Duomenų šaltiniai"))
     datasets = models.ManyToManyField(Dataset)
+    likes = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
         return reverse('project-details', args=[self.agent.slug, self.slug])
+
+
+class Likes(models.Model):
+    created = CreationDateTimeField()
+    modified = ModificationDateTimeField()
+    user = models.ForeignKey(auth_models.User)
+    object_id = models.PositiveIntegerField()
+    object_type = models.CharField(max_length=20, choices=(
+        ('dataset', 'Dataset'),
+        ('project', 'Project'),
+    ))
 
 
 class Queue(models.Model):
