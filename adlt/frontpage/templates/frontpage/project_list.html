@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load trans from i18n %}
+{% load stars from adltcommon %}
 
 
 {% block content %}
@@ -10,7 +11,7 @@
   <thead>
     <tr>
       <th>{% trans "Projektas" %}</th>
-      <th>{% trans "Brandos lygmuo" %}</th>
+      <th>{% trans "Brandos lygis" %}</th>
       <th>{% trans "Duomenų šaltiniai" %}</th>
     </tr>
   </thead>
@@ -18,7 +19,7 @@
     {% for project in projects %}
     <tr>
       <td><a href="{% url 'project-details' project.agent__slug project.slug %}">{{ project.title }}</a></td>
-      <td>{{ project.stars }}</td>
+      <td>{% stars project.stars %}</td>
       <td>{{ project.datasets }}</td>
     </tr>
     {% endfor %}

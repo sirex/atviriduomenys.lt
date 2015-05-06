@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load trans from i18n %}
+{% load stars from adltcommon %}
 
 
 {% block content %}
@@ -10,7 +11,8 @@
   <thead>
     <tr>
       <th>{% trans "Duomenų šaltinis" %}</th>
-      <th>{% trans "Brandos lygmuo" %}</th>
+      <th>{% trans "Tiekėjas" %}</th>
+      <th>{% trans "Brandos lygis" %}</th>
       <th>{% trans "Projektų" %}</th>
     </tr>
   </thead>
@@ -18,7 +20,8 @@
     {% for dataset in datasets %}
     <tr>
       <td><a href="{% url 'dataset-details' dataset.agent__slug dataset.slug %}">{{ dataset.title }}</a></td>
-      <td>{{ dataset.maturity_level }}</td>
+      <td>{{ dataset.agent__title }}</td>
+      <td>{% stars dataset.maturity_level %}</td>
       <td>{{ dataset.projects }}</td>
     </tr>
     {% endfor %}

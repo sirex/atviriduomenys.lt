@@ -32,7 +32,7 @@ def project_rating():
 def dataset_rating():
     return (
         core_models.Dataset.objects.
-        values('agent__slug', 'slug', 'title', 'maturity_level').
+        values('agent__slug', 'slug', 'agent__title', 'title', 'maturity_level').
         annotate(projects=Count('project')).
         order_by('-projects', 'title')
     )

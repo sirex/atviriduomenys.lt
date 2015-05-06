@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load trans from i18n %}
+{% load static from staticfiles %}
+{% load stars from adltcommon %}
 
 
 {% block content %}
@@ -10,7 +12,7 @@
   <thead>
     <tr>
       <th>{% trans "Tiekėjas" %}</th>
-      <th>{% trans "Brandos lygmuo" %}</th>
+      <th>{% trans "Brandos lygis" %}</th>
       <th>{% trans "Projektų" %}</th>
     </tr>
   </thead>
@@ -18,7 +20,7 @@
     {% for agent in agents %}
     <tr>
       <td>{{ agent.title }}</td>
-      <td>{{ agent.stars }}</td>
+      <td>{% stars agent.stars %}</td>
       <td>{{ agent.projects }}</td>
     </tr>
     {% endfor %}
