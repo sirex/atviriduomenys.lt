@@ -1,0 +1,38 @@
+{% extends "socialaccount/base.html" %}
+{% load url from future %}
+{% load formrenderer from adltcommon %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+
+<form class="signup form-horizontal" id="signup_form" method="post" action="{% url 'socialaccount_signup' %}">
+  <div class="col-sm-offset-2 col-sm-10">
+    <h1>{% trans "Pabaigite registraciją" %}</h1>
+  </div>
+
+  <div class="col-sm-offset-2 col-sm-10 alert alert-info" role="alert">
+    <p>
+      {% blocktrans with provider_name=account.get_provider.name site_name=site.name %}
+      Jūsų registracija į {{ site_name }} beveik baigta. Prašome užpildyti žemiau pateiktą formą ir galėsite pradėti
+      naudotis {{ site_name }}.
+      {% endblocktrans %}
+    </p>
+  </div>
+
+  {% csrf_token %}
+  {% formrenderer form %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-primary">{% trans "Pateikti" %}</button>
+    </div>
+  </div>
+</form>
+
+
+{% endblock %}

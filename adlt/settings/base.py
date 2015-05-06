@@ -25,6 +25,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.auth',
     'django.contrib.messages',
+    'django.contrib.admin',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -40,7 +41,9 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = []
+TEMPLATE_CONTEXT_PROCESSORS = [
+    'django.contrib.auth.context_processors.auth',
+]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -122,6 +125,7 @@ INSTALLED_APPS += (
     'adlt.accounts',
     'adlt.frontpage',
     'adlt.populatedb',
+    'adlt.administration',
 )
 
 

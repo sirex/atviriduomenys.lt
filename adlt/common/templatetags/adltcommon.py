@@ -1,5 +1,6 @@
 import yattag
 import markdown
+from adlt.common.helpers import formrenderer
 
 from django import template
 from django.utils.safestring import mark_safe
@@ -11,6 +12,11 @@ register = template.Library()
 @register.filter(name='markdown')
 def markdown_tag(value):
     return mark_safe(markdown.markdown(value, extensions=['markdown.extensions.attr_list']))
+
+
+@register.simple_tag(name='formrenderer', takes_context=True)
+def formrenderer_filter(context, form):
+    return mark_safe(formrenderer.render_fields(context['request'], form))
 
 
 @register.simple_tag()

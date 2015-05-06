@@ -54,6 +54,11 @@ class Bootstrap3(object):
                 with self.tag('button', type='submit', klass='btn btn-primary'):
                     self.text(self.submit)
 
+    def fields(self):
+        self.errors(self.form.non_field_errors())
+        for field in self.form:
+            self.field(field)
+
     def render(self):
         with self.tag('form', klass='form-horizontal', method='post'):
             if self.title:
@@ -65,12 +70,16 @@ class Bootstrap3(object):
                     # with self.tag('div', klass='alert alert-info', role='alert'):
                     self.markdown(str(self.description))
             self.csrf_token()
-            self.errors(self.form.non_field_errors())
-            for field in self.form:
-                self.field(field)
+            self.fields()
             self.buttons()
         return self.doc.getvalue()
 
 
 def render(request, form: django.forms.Form, **kwargs):
     return Bootstrap3(request, form, **kwargs).render()
+
+
+def render_fields(request, form: django.forms.Form):
+    renderer = Bootstrap3(request, form)
+    renderer.fields()
+    return renderer.doc.getvalue()
