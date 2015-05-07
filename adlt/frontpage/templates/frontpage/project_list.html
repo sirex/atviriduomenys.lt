@@ -13,6 +13,7 @@
       <th>{% trans "Projektas" %}</th>
       <th>{% trans "Brandos lygis" %}</th>
       <th>{% trans "Duomenų šaltiniai" %}</th>
+      <th><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span></th>
     </tr>
   </thead>
   <tbody>
@@ -21,6 +22,7 @@
       <td><a href="{% url 'project-details' project.agent__slug project.slug %}">{{ project.title }}</a></td>
       <td>{% stars project.stars %}</td>
       <td>{{ project.datasets }}</td>
+      <td>{{ project.likes }}</td>
     </tr>
     {% endfor %}
   </tbody>

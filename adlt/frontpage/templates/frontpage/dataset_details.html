@@ -1,17 +1,19 @@
 {% extends "base.html" %}
 {% load trans from i18n %}
 {% load markdown from adltcommon %}
+{% load likebutton from adltcommon %}
 
 
 {% block content %}
 
-{% if can_update %}
 <div class="pull-right">
+  {% likebutton dataset %}
+  {% if can_update %}
   <a href="{% url 'dataset-update' dataset.agent.slug dataset.slug %}" class="btn btn-default">
     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans "Keisti" %}
   </a>
+  {% endif %}
 </div>
-{% endif %}
 
 <h1>{{ dataset.title }}</h1>
 

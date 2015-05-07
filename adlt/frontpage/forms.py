@@ -1,5 +1,6 @@
 from django import forms
 from django.db import models
+from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
@@ -20,10 +21,13 @@ class ModelTypeaheadField(forms.ModelChoiceField):
 
 
 class ProjectForm(forms.ModelForm):
-    agent = ModelTypeaheadField(core_models.Agent.objects.all(), label=_('Organizacija/Asmuo'), help_text=_(
-        'Organizacija arba individualus asmuo vykdantis arba planuojantis vykdyti projektą. Pasirinkite esamą '
-        'iš sąrašo arba įveskite naują organizacijos pavadinimą arba individualaus asmens vardą.'
-    ))
+    agent = ModelTypeaheadField(
+        core_models.Agent.objects.all(), label=_('Organizacija/Asmuo'), required=True,
+        help_text=_(
+            'Organizacija arba individualus asmuo vykdantis arba planuojantis vykdyti projektą. Pasirinkite esamą '
+            'iš sąrašo arba įveskite naują organizacijos pavadinimą arba individualaus asmens vardą.'
+        ),
+    )
 
     class Meta:
         model = core_models.Project
@@ -46,13 +50,44 @@ class ProjectForm(forms.ModelForm):
             ),
         }
 
+    def _get_dataset(self, link):
+        prefix = settings.WEBSITE_URL + 'datasets/'
+        if link.startswith(prefix):
+            spl = link[len(prefix):].strip('/').split('/')
+            if len(spl) == 2:
+                agent_slug, dataset_slug = spl
+                try:
+                    return core_models.Dataset.objects.get(agent__slug=agent_slug, slug=dataset_slug)
+                except core_models.Dataset.DoesNotExist:
+                    pass
+
     def clean_datasets_links(self):
         result = []
+        invalid_links = []
         value = self.cleaned_data.get('datasets_links', '')
         for line in map(str.strip, value.splitlines()):
-            if line:
-                result.append(line)
-        return result
+            if not line:
+                continue
+
+            dataset = None
+            if line.startswith(settings.WEBSITE_URL):
+                dataset = self._get_dataset(line)
+                if dataset is None:
+                    invalid_links.append(line)
+
+            result.append((line, dataset))
+
+        if invalid_links:
+            raise forms.ValidationError((
+                "Sekantys adresai yra klaidingi:\n"
+                "\n"
+                "- %s\n"
+                "\n"
+                "Įsitikinkite, kad nuorodos į atviriduomenys.lt svetainę yra veikiančios ir rodo į duomenų šaltinio "
+                "puslapį.\n"
+            ) % '\n- '.join(invalid_links))
+        else:
+            return result
 
 
 class DatasetForm(forms.ModelForm):

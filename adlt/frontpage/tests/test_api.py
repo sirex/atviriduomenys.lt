@@ -20,20 +20,12 @@ class ViewTests(WebTest):
         dataset = core_factories.DatasetFactory(title='Ds 1', agent=agent)
         self.assertEqual(dataset.likes, 0)
 
-        resp = self.app.get('/likes/dataset/%d/like/' % dataset.pk, user='u1')
+        resp = self.app.get('/likes/dataset/%d/toggle/' % dataset.pk, user='u1')
         self.assertEqual(resp.json, {'status': 'ok'})
         self.assertEqual(get(dataset).likes, 1)
 
-        resp = self.app.get('/likes/dataset/%d/like/' % dataset.pk, user='u1')
-        self.assertEqual(resp.json, {'status': 'exists'})
-        self.assertEqual(get(dataset).likes, 1)
-
-        resp = self.app.get('/likes/dataset/%d/unlike/' % dataset.pk, user='u1')
+        resp = self.app.get('/likes/dataset/%d/toggle/' % dataset.pk, user='u1')
         self.assertEqual(resp.json, {'status': 'ok'})
-        self.assertEqual(get(dataset).likes, 0)
-
-        resp = self.app.get('/likes/dataset/%d/unlike/' % dataset.pk, user='u1')
-        self.assertEqual(resp.json, {'status': 'missing'})
         self.assertEqual(get(dataset).likes, 0)
 
     def test_project_like(self):
@@ -42,18 +34,10 @@ class ViewTests(WebTest):
         project = core_factories.ProjectFactory(title='Ds 1', agent=agent)
         self.assertEqual(project.likes, 0)
 
-        resp = self.app.get('/likes/project/%d/like/' % project.pk, user='u1')
+        resp = self.app.get('/likes/project/%d/toggle/' % project.pk, user='u1')
         self.assertEqual(resp.json, {'status': 'ok'})
         self.assertEqual(get(project).likes, 1)
 
-        resp = self.app.get('/likes/project/%d/like/' % project.pk, user='u1')
-        self.assertEqual(resp.json, {'status': 'exists'})
-        self.assertEqual(get(project).likes, 1)
-
-        resp = self.app.get('/likes/project/%d/unlike/' % project.pk, user='u1')
+        resp = self.app.get('/likes/project/%d/toggle/' % project.pk, user='u1')
         self.assertEqual(resp.json, {'status': 'ok'})
-        self.assertEqual(get(project).likes, 0)
-
-        resp = self.app.get('/likes/project/%d/unlike/' % project.pk, user='u1')
-        self.assertEqual(resp.json, {'status': 'missing'})
         self.assertEqual(get(project).likes, 0)

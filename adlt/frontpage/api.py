@@ -19,26 +19,7 @@ def agent_list(request):
 
 @login_required
 @ajax.request('GET')
-def like(request, object_type, object_id):
-    object_types = {
-        'dataset': core_models.Dataset,
-        'project': core_models.Project,
-    }
-
-    if object_type not in object_types:
-        raise Http404
-
-    if core_models.Likes.objects.filter(user=request.user, object_type=object_type, object_id=object_id).exists():
-        return {'status': 'exists'}
-    else:
-        object_types[object_type].objects.filter(pk=object_id).update(likes=F('likes') + 1)
-        core_models.Likes.objects.create(user=request.user, object_type=object_type, object_id=object_id)
-        return {'status': 'ok'}
-
-
-@login_required
-@ajax.request('GET')
-def unlike(request, object_type, object_id):
+def like_toggle(request, object_type, object_id):
     object_types = {
         'dataset': core_models.Dataset,
         'project': core_models.Project,
@@ -51,6 +32,8 @@ def unlike(request, object_type, object_id):
     if qs.exists():
         object_types[object_type].objects.filter(pk=object_id).update(likes=F('likes') - 1)
         qs.delete()
-        return {'status': 'ok'}
     else:
-        return {'status': 'missing'}
+        object_types[object_type].objects.filter(pk=object_id).update(likes=F('likes') + 1)
+        core_models.Likes.objects.create(user=request.user, object_type=object_type, object_id=object_id)
+
+    return {'status': 'ok'}

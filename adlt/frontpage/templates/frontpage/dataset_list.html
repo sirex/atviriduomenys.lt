@@ -14,6 +14,7 @@
       <th>{% trans "Tiekėjas" %}</th>
       <th>{% trans "Brandos lygis" %}</th>
       <th>{% trans "Projektų" %}</th>
+      <th><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span></th>
     </tr>
   </thead>
   <tbody>
@@ -23,6 +24,7 @@
       <td>{{ dataset.agent__title }}</td>
       <td>{% stars dataset.maturity_level %}</td>
       <td>{{ dataset.projects }}</td>
+      <td>{{ dataset.likes }}</td>
     </tr>
     {% endfor %}
   </tbody>

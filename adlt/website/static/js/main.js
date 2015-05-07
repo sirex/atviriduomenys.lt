@@ -31,4 +31,31 @@ require(['require'], function(require) {
 
     });
 
+    $('.like-button').click(function () {
+        var $this = $(this);
+        var action_url = $this.data('action');
+        var next_label = $this.data('label');
+
+        function update_total_likes(value) {
+            var $elem = $this.parents('.input-group').first().find('.total-likes');
+            var likes = parseInt($elem.text());
+            $elem.text(likes + value);
+        }
+
+        $.getJSON(action_url, function(data) {
+            if ($this.data('likes')) {
+                $this.find('.like').show();
+                $this.find('.unlike').hide();
+                $this.data('likes', false);
+                update_total_likes(-1);
+            }
+            else {
+                $this.find('.like').hide();
+                $this.find('.unlike').show();
+                $this.data('likes', true);
+                update_total_likes(1);
+            }
+        });
+    });
+
 });

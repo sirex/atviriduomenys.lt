@@ -1,10 +1,14 @@
 import yattag
 import markdown
-from adlt.common.helpers import formrenderer
 
 from django import template
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext
+from django.core.urlresolvers import reverse
 from django.contrib.staticfiles.storage import staticfiles_storage
+
+import adlt.core.models as core_models
+from adlt.common.helpers import formrenderer
 
 register = template.Library()
 
@@ -25,4 +29,51 @@ def stars(value):
     doc = yattag.Doc()
     for i in range(round(value)):
         doc.stag('img', src=star_path)
+    return doc.getvalue()
+
+
+@register.simple_tag(takes_context=True)
+def likebutton(context, obj):
+    if isinstance(obj, core_models.Project):
+        object_type = 'project'
+    elif isinstance(obj, core_models.Dataset):
+        object_type = 'dataset'
+    else:
+        raise ValueError('Invalid obj type: %r.' % obj)
+
+    request = context['request']
+
+    likes = core_models.Likes.objects.filter(user=request.user, object_type=object_type, object_id=obj.pk).exists()
+
+    doc = yattag.Doc()
+    with doc.tag('div', klass='input-group'):
+        with doc.tag('span', klass='input-group-addon'):
+            with doc.tag('a', href='#', klass='btn btn-success btn-sm like-button'):
+                doc.attr(
+                    ('data-action', reverse('like-toggle', args=(object_type, obj.pk))),
+                    ('data-likes', 'true' if likes else 'false'),
+                )
+
+                with doc.tag('span', klass='like'):
+                    if likes:
+                        doc.attr(style='display: none;')
+
+                    with doc.tag('span', ('aria-hidden', 'true'), klass='glyphicon glyphicon-thumbs-up'):
+                        doc.text('')
+
+                    doc.asis('&nbsp;' + ugettext('Patinka'))
+
+                with doc.tag('span', klass='unlike'):
+                    if not likes:
+                        doc.attr(style='display: none;')
+
+                    with doc.tag('span', ('aria-hidden', 'true'), klass='glyphicon glyphicon-thumbs-down'):
+                        doc.text('')
+
+                    doc.asis('&nbsp;' + ugettext('Nebepatinka'))
+
+        with doc.tag('span', klass='input-group-addon'):
+            with doc.tag('strong', klass='total-likes'):
+                doc.text(str(obj.likes))
+
     return doc.getvalue()

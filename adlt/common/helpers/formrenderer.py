@@ -28,7 +28,7 @@ class Bootstrap3(object):
             with self.tag('div', klass='help-block'):
                 for error in errors:
                     with self.tag('p', klass='text-danger'):
-                        self.text(error)
+                        self.markdown(str(error))
 
     def help_text(self, field):
         with self.tag('div', klass='help-block'):

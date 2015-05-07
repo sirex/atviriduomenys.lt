@@ -7,7 +7,8 @@ import adlt.frontpage.forms as frontpage_forms
 
 def get_agent_form(data, FormClass, **kwargs):
     agent = None
-    if data.get('agent', '').isdigit():
+    agent_value = data.get('agent', '')
+    if not agent_value or agent_value.isdigit():
         form = FormClass(data, **kwargs)
     else:
         data = data.copy()
@@ -58,21 +59,6 @@ def save_dataset_form(request, form, agent):
     return dataset
 
 
-def parse_dataset_links(links):
-    prefix = settings.WEBSITE_URL + 'datasets/'
-    for link in links:
-        dataset = None
-        if link.startswith(prefix):
-            spl = link[len(prefix):].strip('/').split('/')
-            if len(spl) == 2:
-                agent_slug, dataset_slug = spl
-                try:
-                    dataset = core_models.Dataset.objects.get(agent__slug=agent_slug, slug=dataset_slug)
-                except core_models.Dataset.DoesNotExist:
-                    pass
-        yield link, dataset
-
-
 def update_project_links(links, line, dataset):
     result = []
     for link in links.splitlines():
@@ -88,12 +74,12 @@ def save_project_form(request, form, agent):
     project = form.save(commit=False)
     project.user = request.user
     project.agent = data['agent'] or create_agent_from_title(request, agent)
-    project.datasets_links = ''.join(x + '\n' for x in data['datasets_links'])
+    project.datasets_links = ''.join(link + '\n' for link, dataset in data['datasets_links'])
     project.save()
 
     existing_datasets = project.datasets.values_list('pk', flat=True)
     dataset_ids = []
-    for link, dataset in parse_dataset_links(reversed(data['datasets_links'])):
+    for link, dataset in reversed(data['datasets_links']):
         if dataset is None:
             core_models.Queue.objects.create(
                 user=request.user,

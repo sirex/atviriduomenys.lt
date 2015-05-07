@@ -2,14 +2,13 @@
 {% load trans from i18n %}
 {% load markdown from adltcommon %}
 {% load stars from adltcommon %}
+{% load likebutton from adltcommon %}
 
 
 {% block content %}
 
 <div class="pull-right">
-  <a href="#" class="btn btn-default" data-action="" data-label="{% trans "Nebepatinka" %}">
-    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> {% trans "Patinka" %}
-  </a>
+  {% likebutton project %}
   {% if can_update %}
   <a href="{% url 'project-update' project.agent.slug project.slug %}" class="btn btn-default">
     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans "Keisti" %}
