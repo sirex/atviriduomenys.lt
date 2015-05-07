@@ -1,15 +1,13 @@
 {% load trans from i18n %}
 
-<div class="row">
-  <div class="pull-right create-buttons">
-    <a href="{% url "create-dataset" %}" class="btn btn-success">
-      {% trans "Pateik duomenų šaltinį" %}
-      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-    </a>
-    &nbsp; &nbsp;
-    <a href="{% url "create-project" %}" class="btn btn-primary">
-      <strong>{% trans "Siūlyk projektą" %}</strong>
-      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-    </a>
-  </div>
+<div class="pull-right create-buttons">
+  <a href="{% url "create-dataset" %}" class="btn btn-success">
+    {% trans "Pateik duomenų šaltinį" %}
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+  </a>
+  &nbsp; &nbsp;
+  <a href="{% url "create-project" %}" class="btn btn-primary">
+    <strong>{% trans "Siūlyk projektą" %}</strong>
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+  </a>
 </div>

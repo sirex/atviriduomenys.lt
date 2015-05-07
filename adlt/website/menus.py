@@ -18,5 +18,6 @@ menus = {
         Item(_('Tiekėjai'), 'index'),
         Item(_('Duomenys'), 'dataset-list'),
         Item(_('Projektai'), 'project-list'),
+        Item(_('Pagalba'), 'help-index'),
     ],
 }

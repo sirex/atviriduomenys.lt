@@ -133,6 +133,7 @@ INSTALLED_APPS += (
     'adlt.frontpage',
     'adlt.populatedb',
     'adlt.administration',
+    'adlt.helppages',
 )
 
 

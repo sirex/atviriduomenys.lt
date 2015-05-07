@@ -22,6 +22,7 @@ setup(
         'yattag',
         'psycopg2',
         'mock',
+        'docutils',
     ],
     classifiers=[
         'Development Status :: 1 - Planning',

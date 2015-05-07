@@ -8,11 +8,18 @@
 
 {% include "frontpage/partials/create_buttons.html" %}
 
+<h1 class="create-buttons-heading">Duomenų tiekėjų atvirumo reitingas</h1>
+
 <table class="table">
   <thead>
     <tr>
       <th>{% trans "Tiekėjas" %}</th>
-      <th>{% trans "Brandos lygis" %}</th>
+      <th>
+        {% trans "Brandos lygis" %}
+        <a href="{% url 'help-page' 'brandos-lygiai' %}" target="_blank">
+          <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+        </a>
+      </th>
       <th>{% trans "Projektų" %}</th>
       <th><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span></th>
     </tr>

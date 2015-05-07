@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load trans from i18n %}
+{% load stars from adltcommon %}
+
+
+{% block content %}
+
+<h1>{{ title }}</h1>
+
+{{ body|safe }}
+
+{% endblock %}

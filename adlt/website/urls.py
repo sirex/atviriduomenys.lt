@@ -5,6 +5,7 @@ from adlt.administration import admin
 
 urlpatterns = [
     url(r'', include('adlt.frontpage.urls')),
+    url(r'^pagalba/', include('adlt.helppages.urls')),
     url(r'^accounts/', include('adlt.accounts.urls')),
     url(r'^admin/', include(admin.site.urls)),
 ]
