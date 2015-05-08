@@ -1,10 +1,10 @@
 import configparser
 import pathlib
 
-config = configparser.ConfigParser()
-config.read('buildout.cfg')
-
 PROJECT_DIR = pathlib.Path(__file__).parents[2]
+
+config = configparser.ConfigParser()
+config.read(str(PROJECT_DIR) / 'buildout.cfg')
 
 
 # Django base settings
