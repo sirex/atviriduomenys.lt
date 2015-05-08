@@ -68,6 +68,43 @@ MIGRATION_MODULES = {
     'socialaccount': 'adlt.core.migrations.socialaccount',
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'stdout': {
+            'format': (
+                '%(levelname)s %(asctime)s %(module)s '
+                '%(process)d %(thread)d %(message)s'
+            ),
+        },
+        'console': {
+            'format': '%(levelname)s %(module)s %(message)s',
+        },
+    },
+    'handlers': {
+        'stdout': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'stdout',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+    },
+    'loggers': {
+        'django': {
+            'propagate': True,
+        },
+    },
+    'root': {
+        'level': 'INFO',
+        'handlers': ['console'],
+    }
+}
+
 
 # Static assets, see config/assets.cfg
 # https://pypi.python.org/pypi/hexagonit.recipe.download
