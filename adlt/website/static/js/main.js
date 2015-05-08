@@ -31,7 +31,7 @@ require(['require'], function(require) {
 
     });
 
-    $('.like-button').click(function () {
+    $('.like-button[data-action]').click(function () {
         var $this = $(this);
         var action_url = $this.data('action');
         var next_label = $this.data('label');

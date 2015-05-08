@@ -43,16 +43,22 @@ def likebutton(context, obj):
 
     request = context['request']
 
-    likes = core_models.Likes.objects.filter(user=request.user, object_type=object_type, object_id=obj.pk).exists()
+    if request.user.is_authenticated():
+        likes = core_models.Likes.objects.filter(user=request.user, object_type=object_type, object_id=obj.pk).exists()
+    else:
+        likes = False
 
     doc = yattag.Doc()
     with doc.tag('div', klass='input-group'):
         with doc.tag('span', klass='input-group-addon'):
             with doc.tag('a', href='#', klass='btn btn-success btn-sm like-button'):
-                doc.attr(
-                    ('data-action', reverse('like-toggle', args=(object_type, obj.pk))),
-                    ('data-likes', 'true' if likes else 'false'),
-                )
+                if request.user.is_authenticated():
+                    doc.attr(
+                        ('data-action', reverse('like-toggle', args=(object_type, obj.pk))),
+                        ('data-likes', 'true' if likes else 'false'),
+                    )
+                else:
+                    doc.attr(href=reverse('accounts_login'))
 
                 with doc.tag('span', klass='like'):
                     if likes:
