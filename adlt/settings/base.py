@@ -1,9 +1,9 @@
 import exportrecipe
 import pathlib
 
+PROJECT_DIR = pathlib.Path(__file__).parents[2]
 
-config = exportrecipe.load('settings.json')
-PROJECT_DIR = pathlib.Path(config.project_dir)
+config = exportrecipe.load(str(PROJECT_DIR / 'settings.json'))
 
 
 # Django base settings

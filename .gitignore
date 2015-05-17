@@ -1,6 +1,7 @@
 .installed.cfg
 bin
 buildout.cfg
+settings.json
 develop-eggs
 include
 lib
