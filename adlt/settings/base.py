@@ -1,10 +1,9 @@
-import configparser
+import exportrecipe
 import pathlib
 
-PROJECT_DIR = pathlib.Path(__file__).parents[2]
 
-config = configparser.ConfigParser()
-config.read(str(PROJECT_DIR / 'buildout.cfg'))
+config = exportrecipe.load('settings.json')
+PROJECT_DIR = pathlib.Path(config.project_dir)
 
 
 # Django base settings
@@ -12,7 +11,7 @@ config.read(str(PROJECT_DIR / 'buildout.cfg'))
 
 DEBUG = False
 ROOT_URLCONF = 'adlt.website.urls'
-SECRET_KEY = config['settings']['secret_key']
+SECRET_KEY = config.secret_key
 MEDIA_URL = '/media/'
 MEDIA_ROOT = str(PROJECT_DIR / 'var/www/media')
 STATIC_URL = '/static/'
@@ -156,7 +155,7 @@ INSTALLED_APPS += (
 
 # App settings
 
-WEBSITE_URL = 'http://atviriduomenys.lt/'
+WEBSITE_URL = config.website_url
 
 MIDDLEWARE_CLASSES += (
     'adlt.website.middlewares.WebsiteURLCheckMiddleware',

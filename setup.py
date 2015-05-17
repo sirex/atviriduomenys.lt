@@ -23,6 +23,7 @@ setup(
         'psycopg2',
         'mock',
         'docutils',
+        'exportrecipe',
     ],
     classifiers=[
         'Development Status :: 1 - Planning',
