@@ -8,7 +8,7 @@ require(['require'], function(require) {
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: {
                 cache: false,
-                url: 'http://127.0.0.1:8000' + $this.data('source')
+                url: 'http://ad.sirex.lt' + $this.data('source')
             }
         });
 
