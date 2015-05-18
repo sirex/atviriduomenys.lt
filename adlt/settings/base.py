@@ -195,11 +195,12 @@ INSTALLED_APPS += (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.openid',
     'allauth.socialaccount.providers.persona',
+    'allauth.socialaccount.providers.google',
 )
 
 SORTED_AUTH_PROVIDERS = (
     ('persona', STATIC_URL + 'auth/persona.png'),
-    ('openid.google', STATIC_URL + 'auth/google.png'),
+    ('google', STATIC_URL + 'auth/google.png'),
     ('openid.yahoo', STATIC_URL + 'auth/yahoo.png'),
 )
 
@@ -218,4 +219,10 @@ SOCIALACCOUNT_PROVIDERS = {
     'persona': {
         'AUDIENCE': '127.0.0.1',
     },
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
 }

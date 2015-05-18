@@ -8,6 +8,8 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.views import redirect_to_login
 
+import allauth.socialaccount.admin as allauth
+
 import adlt.core.models as core_models
 
 
@@ -43,3 +45,7 @@ site.register(core_models.Agent)
 site.register(core_models.Dataset)
 site.register(core_models.Project)
 site.register(core_models.Queue)
+
+site.register(allauth.SocialApp, allauth.SocialAppAdmin)
+site.register(allauth.SocialToken, allauth.SocialTokenAdmin)
+site.register(allauth.SocialAccount, allauth.SocialAccountAdmin)
