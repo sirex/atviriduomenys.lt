@@ -18,3 +18,5 @@ LOGGING['root'] = {
     'level': 'WARNING',
     'handlers': ['stdout'],
 }
+
+SOCIALACCOUNT_PROVIDERS['persona']['AUDIENCE'] = 'ad.sirex.lt'
