@@ -4,7 +4,7 @@ from adlt.settings.base import *  # noqa
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['atviriduomenys.lt', 'www.atviriduomenys.lt', 'ad.sirex.lt', 'localhost']
+ALLOWED_HOSTS = ['atviriduomenys.lt', 'localhost']
 
 DATABASES = {
     'default': {
@@ -19,4 +19,4 @@ LOGGING['root'] = {
     'handlers': ['stdout'],
 }
 
-SOCIALACCOUNT_PROVIDERS['persona']['AUDIENCE'] = 'ad.sirex.lt'
+SOCIALACCOUNT_PROVIDERS['persona']['AUDIENCE'] = 'atviriduomenys.lt'
