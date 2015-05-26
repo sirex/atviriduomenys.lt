@@ -66,8 +66,7 @@ class Project(models.Model):
     slug = autoslug.AutoSlugField(populate_from='title', unique_with='agent')
     title = models.CharField(_("Pavadinimas"), max_length=255)
     description = models.TextField(_("Aprašymas"))
-    datasets_links = models.TextField(_("Duomenų šaltiniai"))
-    datasets = models.ManyToManyField(Dataset)
+    datasets = models.ManyToManyField(Dataset, verbose_name=_("Duomenų šaltiniai"))
     likes = models.PositiveIntegerField(default=0)
 
     def __str__(self):

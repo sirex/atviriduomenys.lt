@@ -73,10 +73,6 @@ def project_update(request, agent_slug, project_slug):
                 messages.success(request, ugettext("Projektas „%s“ atnaujintas." % project))
                 return redirect(project)
     else:
-        # Always reset datasets_links to avoid duplicates in queue if queue is not yet completed.
-        project.datasets_links = ''.join([
-            servername.get_website_url(ds.get_absolute_url()) + '\n' for ds in project.datasets.all()
-        ])
         form = frontpage_forms.ProjectForm(instance=project)
 
     return render(request, 'frontpage/project_form.html', {
@@ -150,9 +146,6 @@ def dataset_form(request):
             if queue:
                 project = core_models.Project.objects.get(pk=queue.context['project_id'])
                 project.datasets.add(dataset)
-                project.datasets_links = frontpage_helpers.update_project_links(
-                    project.datasets_links, queue.context['link'], dataset,
-                )
                 project.save()
                 queue.completed = True
                 queue.save()

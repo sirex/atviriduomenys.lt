@@ -59,27 +59,16 @@ def save_dataset_form(request, form, agent):
     return dataset
 
 
-def update_project_links(links, line, dataset):
-    result = []
-    for link in links.splitlines():
-        link = link.strip()
-        if link == line:
-            link = servername.get_website_url(dataset.get_absolute_url())
-        result.append(link + '\n')
-    return ''.join(result)
-
-
 def save_project_form(request, form, agent):
     data = form.cleaned_data
     project = form.save(commit=False)
     project.user = request.user
     project.agent = data['agent'] or create_agent_from_title(request, agent)
-    project.datasets_links = ''.join(link + '\n' for link, dataset in data['datasets_links'])
     project.save()
 
     existing_datasets = project.datasets.values_list('pk', flat=True)
     dataset_ids = []
-    for link, dataset in reversed(data['datasets_links']):
+    for link, dataset in reversed(data['datasets']):
         if dataset is None:
             core_models.Queue.objects.create(
                 user=request.user,

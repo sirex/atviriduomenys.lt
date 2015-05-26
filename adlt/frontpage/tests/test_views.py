@@ -21,7 +21,7 @@ class ViewTests(django_webtest.WebTest):
         resp.form['title'] = 'My project'
         resp.form['agent'] = agent.pk
         resp.form['description'] = 'My project description.'
-        resp.form['datasets_links'] = 'http://example.com/'
+        resp.form['datasets'] = 'http://example.com/'
         resp = resp.form.submit()
 
         self.assertEqual(resp.status_int, 302)
@@ -34,7 +34,7 @@ class ViewTests(django_webtest.WebTest):
         resp.form['title'] = 'My project'
         resp.form['agent'] = 'New agent'
         resp.form['description'] = 'My project description.'
-        resp.form['datasets_links'] = 'http://example.com/'
+        resp.form['datasets'] = 'http://example.com/'
         resp = resp.form.submit()
 
         self.assertEqual(resp.status_int, 302)

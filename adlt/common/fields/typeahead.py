@@ -1,6 +1,6 @@
 from django import forms
 from django.db import models
-from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse_lazy
 
 
 class TypeaheadWidget(forms.TextInput):
@@ -27,3 +27,15 @@ class TypeaheadWidget(forms.TextInput):
             super().render(name + '_typeahead', label, attrs) +
             '<input type="hidden" id="%s" name="%s" value="%s">' % (attrs['data-input'], name, value)
         )
+
+
+class ModelTypeaheadField(forms.ModelChoiceField):
+    widget = TypeaheadWidget(reverse_lazy('agent-list-json'))
+
+    def prepare_value(self, value):
+        if isinstance(value, models.Model):
+            return value
+        elif value:
+            return self.queryset.get(pk=value)
+        else:
+            return None

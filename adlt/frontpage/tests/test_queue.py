@@ -20,7 +20,7 @@ class ViewTests(django_webtest.WebTest):
         resp.form['title'] = 'My project'
         resp.form['agent'] = 'Org 1'
         resp.form['description'] = 'My project description.'
-        resp.form['datasets_links'] = (
+        resp.form['datasets'] = (
             'New dataset\n'
             'http://example.com/dataset/1\n'
         )
@@ -33,10 +33,7 @@ class ViewTests(django_webtest.WebTest):
         ])
 
         project = core_models.Project.objects.get(slug='my-project')
-        self.assertEqual(project.datasets_links, (
-            'New dataset\n'
-            'http://example.com/dataset/1\n'
-        ))
+        self.assertEqual(list(project.datasets.values_list('title', flat=True)), [])
 
         # First dataset form
         resp = resp.follow()
@@ -55,10 +52,7 @@ class ViewTests(django_webtest.WebTest):
         ])
 
         project = core_models.Project.objects.get(slug='my-project')
-        self.assertEqual(project.datasets_links, (
-            'http://localhost:80/datasets/org-2/new-dataset/\n'
-            'http://example.com/dataset/1\n'
-        ))
+        self.assertEqual(list(project.datasets.values_list('title', flat=True)), ['New dataset'])
 
         # Second dataset form
         resp = resp.follow()
@@ -81,18 +75,20 @@ class ViewTests(django_webtest.WebTest):
         ])
 
         project = core_models.Project.objects.get(slug='my-project')
-        self.assertEqual(project.datasets_links, (
-            'http://localhost:80/datasets/org-2/new-dataset/\n'
-            'http://localhost:80/datasets/org-2/dataset-2/\n'
-        ))
+        self.assertEqual(list(project.datasets.values_list('title', flat=True)), ['New dataset', 'Dataset 2'])
         self.assertEqual(project.user.username, user.username)
 
         # Update existing project
         agent = core_factories.AgentFactory(title='Agent 7')
         dataset = core_factories.DatasetFactory(title='Dataset 14', agent=agent)
         resp = self.app.get(project.get_absolute_url() + 'update/', user='u1')
+        self.assertEqual(resp.form['datasets'].value, (
+            'http://localhost:80/datasets/org-2/new-dataset/\n'
+            'http://localhost:80/datasets/org-2/dataset-2/\n'
+        ))
+
         resp.form['title'] = 'My project (updated)'
-        resp.form['datasets_links'] = (
+        resp.form['datasets'] = (
             'http://localhost:80/datasets/org-2/dataset-2/\n'
             'http://localhost:80%s\n' % dataset.get_absolute_url()
         )
