@@ -12,7 +12,6 @@ import adlt.frontpage.services as frontpage_services
 import adlt.frontpage.forms as frontpage_forms
 import adlt.frontpage.helpers as frontpage_helpers
 from adlt.common.helpers import formrenderer
-from adlt.common import servername
 
 
 def index(request):
@@ -94,7 +93,7 @@ def project_form(request):
                 url, args, kwargs = queue.url
                 return django.http.HttpResponseRedirect(reverse(url, args=args, kwargs=kwargs) + '?qref=%d' % queue.pk)
             else:
-                messages.success(request, ugettext("Projektas „%s“ sėkminngai sukurtas." % project))
+                messages.success(request, ugettext("Projektas „%s“ sėkmingai sukurtas." % project))
                 return redirect(project)
     else:
         form = frontpage_forms.ProjectForm()
