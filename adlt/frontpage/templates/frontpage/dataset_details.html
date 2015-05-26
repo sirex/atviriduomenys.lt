@@ -19,6 +19,14 @@
 
 {{ dataset.description|markdown }}
 
+{% if dataset.link %}
+<div class="panel panel-info">
+  <div class="panel-body">
+    <strong>{% trans "Daugiau informacijos:" %}</strong> <a href="{{ dataset.link }}">{{ dataset.link }}</a>
+  </div>
+</div>
+{% endif %}
+
 {% if projects %}
 <h2>Projektai naudojantys šį duomenų šaltinį</h2>
 
