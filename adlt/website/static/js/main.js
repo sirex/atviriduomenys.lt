@@ -8,7 +8,7 @@ require(['require'], function(require) {
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: {
                 cache: false,
-                url: 'http://atviriduomenys.lt' + $this.data('source')
+                url: window.location.protocol + '//' + window.location.host + $this.data('source')
             }
         });
 
