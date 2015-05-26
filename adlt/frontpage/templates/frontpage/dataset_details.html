@@ -19,6 +19,7 @@
 
 {{ dataset.description|markdown }}
 
+{% if projects %}
 <h2>Projektai naudojantys šį duomenų šaltinį</h2>
 
 {% if projects %}
@@ -36,6 +37,7 @@
     {% endfor %}
   </tbody>
 </table>
+{% endif %}
 {% endif %}
 
 {% endblock %}
