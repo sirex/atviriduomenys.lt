@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.db import models
 from django.conf import settings
@@ -50,28 +52,29 @@ class ProjectForm(forms.ModelForm):
             ),
         }
 
-    def _get_dataset(self, link):
-        prefix = settings.WEBSITE_URL + 'datasets/'
-        if link.startswith(prefix):
-            spl = link[len(prefix):].strip('/').split('/')
-            if len(spl) == 2:
-                agent_slug, dataset_slug = spl
-                try:
-                    return core_models.Dataset.objects.get(agent__slug=agent_slug, slug=dataset_slug)
-                except core_models.Dataset.DoesNotExist:
-                    pass
+    def _get_dataset(self, match, link):
+        fragment = match.group(0) + '/datasets/'
+        spl = link[len(fragment):].strip('/').split('/')
+        if len(spl) == 2:
+            agent_slug, dataset_slug = spl
+            try:
+                return core_models.Dataset.objects.get(agent__slug=agent_slug, slug=dataset_slug)
+            except core_models.Dataset.DoesNotExist:
+                pass
 
     def clean_datasets_links(self):
         result = []
         invalid_links = []
         value = self.cleaned_data.get('datasets_links', '')
+        pattern = r'^https?://(%s)(:\d+)?' % '|'.join(re.escape(x) for x in settings.SERVER_ALIASES)
         for line in map(str.strip, value.splitlines()):
             if not line:
                 continue
 
             dataset = None
-            if line.startswith(settings.WEBSITE_URL):
-                dataset = self._get_dataset(line)
+            match = re.match(pattern, line)
+            if match:
+                dataset = self._get_dataset(match, line)
                 if dataset is None:
                     invalid_links.append(line)
 

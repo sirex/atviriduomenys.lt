@@ -1,5 +1,4 @@
 import django.http
-from django.conf import settings
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
@@ -13,6 +12,7 @@ import adlt.frontpage.services as frontpage_services
 import adlt.frontpage.forms as frontpage_forms
 import adlt.frontpage.helpers as frontpage_helpers
 from adlt.common.helpers import formrenderer
+from adlt.common import servername
 
 
 def index(request):
@@ -75,7 +75,7 @@ def project_update(request, agent_slug, project_slug):
     else:
         # Always reset datasets_links to avoid duplicates in queue if queue is not yet completed.
         project.datasets_links = ''.join([
-            settings.WEBSITE_URL.rstrip('/') + ds.get_absolute_url() + '\n' for ds in project.datasets.all()
+            servername.get_website_url(ds.get_absolute_url()) + '\n' for ds in project.datasets.all()
         ])
         form = frontpage_forms.ProjectForm(instance=project)
 

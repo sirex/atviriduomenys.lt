@@ -1,8 +1,8 @@
-from django.conf import settings
 from django.utils.translation import ugettext
 
 import adlt.core.models as core_models
 import adlt.frontpage.forms as frontpage_forms
+from adlt.common import servername
 
 
 def get_agent_form(data, FormClass, **kwargs):
@@ -64,7 +64,7 @@ def update_project_links(links, line, dataset):
     for link in links.splitlines():
         link = link.strip()
         if link == line:
-            link = settings.WEBSITE_URL + dataset.get_absolute_url().lstrip('/')
+            link = servername.get_website_url(dataset.get_absolute_url())
         result.append(link + '\n')
     return ''.join(result)
 

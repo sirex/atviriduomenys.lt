@@ -2,4 +2,5 @@
 
 from adlt.settings.base import *  # noqa
 
-WEBSITE_URL = 'http://localhost:80/'
+SERVER_PROTOCOL = 'http://'
+SERVER_NAME = 'localhost:80'

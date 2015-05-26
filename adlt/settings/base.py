@@ -155,10 +155,15 @@ INSTALLED_APPS += (
 
 # App settings
 
-WEBSITE_URL = config.website_url
+SERVER_PROTOCOL = 'http://'
+SERVER_NAME = 'atviriduomenys.lt'
 
-MIDDLEWARE_CLASSES += (
-    'adlt.website.middlewares.WebsiteURLCheckMiddleware',
+SERVER_ALIASES = (
+    'atviriduomenys.lt',
+    'www.atviriduomenys.lt',
+    'ad.sirex.lt',
+    'localhost',
+    '127.0.0.1',
 )
 
 INSTALLED_APPS += (
