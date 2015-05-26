@@ -82,7 +82,7 @@ def run_flake8(args):
     cmd = [
         'bin/flake8',
         '--exclude=migrations',
-        '--ignore=E501',
+        '--ignore=E501,E241',
     ] + list(get_paths(args.paths))
     return subprocess.call(cmd)
 
@@ -119,7 +119,18 @@ def main(args=None):
     )
     args = parser.parse_args(args)
 
-    sys.exit(run_tests(args))
+    retcode = run_tests(args)
+
+    if retcode == 0:
+        retcode = run_flake8(args)
+
+    if retcode == 0:
+        retcode = run_pylint(args)
+
+    if retcode == 0 and is_coverage_enabled(args):
+        run_coverage_report(args)
+
+    sys.exit(retcode)
 
 
 if __name__ == '__main__':

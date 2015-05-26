@@ -27,7 +27,7 @@ def formrenderer_filter(context, form):
 def stars(value):
     star_path = staticfiles_storage.url('img/star-icon.png')
     doc = yattag.Doc()
-    for i in range(round(value)):
+    for i in range(round(value)):  # pylint: disable=unused-variable
         doc.stag('img', src=star_path)
     return doc.getvalue()
 

@@ -1,4 +1,6 @@
 [run]
 omit =
+    adlt/settings/*
     */migrations/*
     */tests/*
+    */__init__.py

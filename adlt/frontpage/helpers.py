@@ -2,7 +2,6 @@ from django.utils.translation import ugettext
 
 import adlt.core.models as core_models
 import adlt.frontpage.forms as frontpage_forms
-from adlt.common import servername
 
 
 def get_agent_form(data, FormClass, **kwargs):

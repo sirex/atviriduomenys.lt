@@ -7,7 +7,7 @@ import allauth.socialaccount.providers as allauth_providers
 import adlt.accounts.views as accounts_views
 
 
-def get_provider_urls(provider):
+def get_provider_urls(provider):  # pylint: disable=redefined-outer-name
     try:
         urls = importlib.import_module(provider.package + '.urls')
     except ImportError:

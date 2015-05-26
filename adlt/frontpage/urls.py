@@ -1,3 +1,5 @@
+# pylint: disable=line-too-long
+
 from django.conf.urls import url
 
 from adlt.frontpage import api

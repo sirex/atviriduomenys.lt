@@ -7,7 +7,7 @@ import adlt.core.models as core_models
 
 
 @ajax.request('GET')
-def agent_list(request):
+def agent_list(request):  # pylint: disable=unused-argument
     return [
         {
             'pk': agent.pk,

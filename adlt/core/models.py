@@ -97,7 +97,7 @@ class Queue(models.Model):
     message = models.TextField()
 
     def __str__(self):
-        url, args, kwargs = self.url
+        url, args, kwargs = self.url  # pylint: disable=unpacking-non-sequence
         return ' '.join([
             url,
             ' '.join(map(str, args)),

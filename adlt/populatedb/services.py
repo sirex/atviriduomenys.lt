@@ -1,3 +1,5 @@
+# pylint: disable=line-too-long
+
 import django.contrib.auth.models as auth_models
 
 from adlt.core import factories as core_factories

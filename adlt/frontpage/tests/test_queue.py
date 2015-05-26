@@ -8,7 +8,7 @@ import adlt.frontpage.services as frontpage_services
 
 
 class ViewTests(django_webtest.WebTest):
-    def test_queue(self):
+    def test_queue(self):  # pylint: disable=too-many-statements
         def qref():
             queue = frontpage_services.get_next_from_queue(user)
             return queue.pk if queue else None

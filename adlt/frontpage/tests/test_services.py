@@ -37,8 +37,8 @@ class ServiceTests(django.test.TransactionTestCase):
 
                 project.datasets.add(dataset)
 
-    # pylint: disable=invalid-name
     def test_orgstats(self):
+        # pylint: disable=invalid-name,bad-whitespace
         self.create([
             # agent   dataset   stars   likes   project   likes
             ('a1',   ('d1',     1,      1),    ('p1',     1)),

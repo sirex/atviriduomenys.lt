@@ -7,7 +7,7 @@ from django.utils.translation import ugettext
 
 
 class Bootstrap3(object):
-    def __init__(self, request, form: django.forms.Form, title=None, submit=ugettext('Submit'), description=''):
+    def __init__(self, request, form, title=None, submit=ugettext('Submit'), description=''):
         self.request = request
         self.form = form
         self.title = title

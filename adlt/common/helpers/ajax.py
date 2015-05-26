@@ -7,7 +7,7 @@ from django.utils.decorators import available_attrs
 def request(*permitted_methods):
     def decorator(func):
         @wraps(func, assigned=available_attrs(func))
-        def wrapper(request, *args, **kwargs):
+        def wrapper(request, *args, **kwargs):  # pylint: disable=redefined-outer-name
             if request.method not in permitted_methods:
                 return HttpResponseNotAllowed(permitted_methods)
 

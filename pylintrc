@@ -38,7 +38,7 @@ load-plugins=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=missing-docstring,locally-disabled,no-member,unexpected-keyword-arg,no-value-for-parameter,too-many-public-methods,bad-builtin,no-self-use,too-few-public-methods,star-args,invalid-name
+disable=missing-docstring,locally-disabled,no-member,unexpected-keyword-arg,no-value-for-parameter,too-many-public-methods,bad-builtin,no-self-use,too-few-public-methods,star-args,invalid-name,protected-access
 
 
 [REPORTS]
@@ -292,7 +292,7 @@ valid-metaclass-classmethod-first-arg=mcs
 [DESIGN]
 
 # Maximum number of arguments for function / method
-max-args=5
+max-args=8
 
 # Argument names that match this expression will be ignored. Default to name
 # with leading underscore
@@ -314,7 +314,7 @@ max-statements=50
 max-parents=7
 
 # Maximum number of attributes for a class (see R0902).
-max-attributes=7
+max-attributes=10
 
 # Minimum number of public methods for a class (see R0903).
 min-public-methods=2
