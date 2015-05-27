@@ -38,6 +38,7 @@ class DatasetFactory(factory.DjangoModelFactory):
 class ProjectFactory(factory.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
     title = factory.LazyAttribute(fake.company())
+    description = factory.LazyAttribute(fake.sentence())
 
     class Meta:
         model = core_models.Project

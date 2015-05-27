@@ -22,7 +22,7 @@ class DatasetQueue(object):
         else:
             self.item = None
 
-    def add_from_project(self, project, link):
+    def add_from_project(self, project, link, create):
         if link.startswith('http://') or link.startswith('https://'):
             data = {'link': link}
         else:
@@ -32,7 +32,7 @@ class DatasetQueue(object):
             user=self.request.user,
             url=['create-dataset', [], {}],
             data=data,
-            context={'project_id': project.pk, 'link': link},
+            context={'project_id': project.pk, 'link': link, 'create': create},
             message=ugettext((
                 "Prašome pateikti daugiau informacijos apie duomenų šaltinį, kuris buvo priskirtas „%s“ "
                 "projektui."
@@ -72,7 +72,10 @@ class DatasetQueue(object):
 
     def complete(self):
         if self.project:
-            messages.success(self.request, ugettext("Projektas „%s“ sėkmingai sukurtas.") % self.project)
+            if self.item.context.get('create', True):
+                messages.success(self.request, ugettext("Projektas „%s“ sėkmingai sukurtas.") % self.project)
+            else:
+                messages.success(self.request, ugettext("Projektas „%s“ atnaujintas.") % self.project)
             return redirect(self.project)
 
     def initial(self):

@@ -28,6 +28,7 @@ def save_dataset_form(request, form, agent):
 
 
 def save_project_form(request, form, queue, agent):
+    create = not form.instance.pk
     data = form.cleaned_data
     project = form.save(commit=False)
     project.user = request.user
@@ -38,7 +39,7 @@ def save_project_form(request, form, queue, agent):
     dataset_ids = []
     for link, dataset in reversed(data['datasets']):
         if dataset is None:
-            queue.add_from_project(project, link)
+            queue.add_from_project(project, link, create)
         else:
             dataset_ids.append(dataset.pk)
             if dataset.pk not in existing_datasets:

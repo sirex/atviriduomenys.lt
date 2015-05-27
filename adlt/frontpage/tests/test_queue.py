@@ -104,3 +104,39 @@ class ViewTests(django_webtest.WebTest):
             '/datasets/org-2/dataset-2/',
             dataset.get_absolute_url(),
         ])
+
+    def test_update_project(self):
+        def qref():
+            queue = formqueue_services.get_next(user)
+            return queue.pk if queue else None
+
+        user = auth_models.User.objects.create_user('u1')
+        agent = core_factories.AgentFactory(title='Agent 7')
+        dataset = core_factories.DatasetFactory(title='Dataset 14', agent=agent)
+        project = core_factories.ProjectFactory(title='My project', agent=agent)
+        project.datasets.add(dataset)
+
+        resp = self.app.get('/projects/agent-7/my-project/update/', user='u1')
+        resp.form['datasets'] = resp.form['datasets'].value + '\n' + (
+            'New dataset\n'
+        )
+        resp = resp.form.submit()
+
+        self.assertEqual(resp.status_int, 302)
+        self.assertEqual(resp.location, 'http://localhost:80/datasets/create/?qref=%d' % qref())
+
+        resp = resp.follow()
+        self.assertEqual(resp.form['title'].value, 'New dataset')
+        self.assertEqual(resp.form['link'].value, '')
+        resp.form['agent'] = agent.pk
+        resp.form['maturity_level'] = '3'
+        resp.form['description'] = 'Dataset 3.'
+        resp = resp.form.submit()
+
+        self.assertEqual(resp.status_int, 302)
+        self.assertEqual(qref(), None)
+        self.assertEqual(resp.location, 'http://localhost:80/projects/agent-7/my-project/')
+        self.assertEqual([ds.get_absolute_url() for ds in project.datasets.all()], [
+            '/datasets/agent-7/dataset-14/',
+            '/datasets/agent-7/new-dataset/',
+        ])
