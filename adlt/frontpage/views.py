@@ -1,8 +1,6 @@
-import django.http
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -11,6 +9,7 @@ import adlt.core.models as core_models
 import adlt.frontpage.services as frontpage_services
 import adlt.frontpage.forms as frontpage_forms
 import adlt.frontpage.helpers as frontpage_helpers
+import adlt.frontpage.queues as frontpage_queues
 from adlt.common.helpers import formrenderer
 
 
@@ -62,12 +61,10 @@ def project_update(request, agent_slug, project_slug):
     if request.method == 'POST':
         form, agent = frontpage_helpers.get_agent_form(request.POST, frontpage_forms.ProjectForm, instance=project)
         if form.is_valid():
-            frontpage_helpers.save_project_form(request, form, agent)
-
-            queue = frontpage_services.get_next_from_queue(request.user)
-            if queue:
-                url, args, kwargs = queue.url
-                return django.http.HttpResponseRedirect(reverse(url, args=args, kwargs=kwargs) + '?qref=%d' % queue.pk)
+            queue = frontpage_queues.DatasetQueue(request)
+            frontpage_helpers.save_project_form(request, form, queue, agent)
+            if queue.is_active():
+                return queue.redirect()
             else:
                 messages.success(request, ugettext("Projektas „%s“ atnaujintas." % project))
                 return redirect(project)
@@ -86,12 +83,10 @@ def project_form(request):
     if request.method == 'POST':
         form, agent = frontpage_helpers.get_agent_form(request.POST, frontpage_forms.ProjectForm)
         if form.is_valid():
-            project = frontpage_helpers.save_project_form(request, form, agent)
-
-            queue = frontpage_services.get_next_from_queue(request.user)
-            if queue:
-                url, args, kwargs = queue.url
-                return django.http.HttpResponseRedirect(reverse(url, args=args, kwargs=kwargs) + '?qref=%d' % queue.pk)
+            queue = frontpage_queues.DatasetQueue(request)
+            project = frontpage_helpers.save_project_form(request, form, queue, agent)
+            if queue.is_active():
+                return queue.redirect()
             else:
                 messages.success(request, ugettext("Projektas „%s“ sėkmingai sukurtas." % project))
                 return redirect(project)
@@ -126,44 +121,22 @@ def dataset_update(request, agent_slug, dataset_slug):
 
 @login_required
 def dataset_form(request):
-    title = ugettext('Pateikti naują duomenų šaltinį')
-    submit = ugettext('Pateikti')
-    description = ''
-
-    if 'qref' in request.GET:
-        queue = get_object_or_404(core_models.Queue, pk=request.GET['qref'], user=request.user, completed=False)
-        title = ugettext('Informacija apie duomenų šaltinį')
-        description = queue.message
-    else:
-        queue = None
+    queue = frontpage_queues.DatasetQueue(request)
 
     if request.method == 'POST':
         form, agent = frontpage_helpers.get_agent_form(request.POST, frontpage_forms.DatasetForm)
         if form.is_valid():
             dataset = frontpage_helpers.save_dataset_form(request, form, agent)
-
-            if queue:
-                project = core_models.Project.objects.get(pk=queue.context['project_id'])
-                project.datasets.add(dataset)
-                project.save()
-                queue.completed = True
-                queue.save()
-
-            next_queue = frontpage_services.get_next_from_queue(request.user)
-            if next_queue:
-                url, args, kwargs = next_queue.url
-                redirect_url = reverse(url, args=args, kwargs=kwargs) + '?qref=%d' % next_queue.pk
-                return django.http.HttpResponseRedirect(redirect_url)
-            elif queue:
-                messages.success(request, ugettext("Projektas „%s“ sėkminngai sukurtas." % project))
-                return redirect(project)
+            queue.process(dataset)
+            if queue.is_active():
+                return queue.redirect()
             else:
                 messages.success(request, ugettext("Duomenų šaltinis „%s“ sėkminngai sukurtas." % dataset))
                 return redirect(dataset)
+
     else:
-        initial = queue.data if queue else {}
-        form = frontpage_forms.DatasetForm(initial=initial)
+        form = frontpage_forms.DatasetForm(initial=queue.initial())
 
     return render(request, 'frontpage/dataset_form.html', {
-        'form': formrenderer.render(request, form, title=title, submit=submit, description=description),
+        'form': queue.form(form),
     })

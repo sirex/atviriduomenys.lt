@@ -64,7 +64,3 @@ def dataset_rating():
         annotate(projects=Count('project')).
         order_by('-likes', '-projects', 'title')
     )
-
-
-def get_next_from_queue(user):
-    return core_models.Queue.objects.filter(user=user, completed=False).order_by('-created').first()

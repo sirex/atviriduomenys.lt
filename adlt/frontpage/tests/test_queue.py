@@ -4,13 +4,13 @@ import django.contrib.auth.models as auth_models
 
 import adlt.core.models as core_models
 import adlt.core.factories as core_factories
-import adlt.frontpage.services as frontpage_services
+import adlt.formqueue.services as formqueue_services
 
 
 class ViewTests(django_webtest.WebTest):
     def test_queue(self):  # pylint: disable=too-many-statements
         def qref():
-            queue = frontpage_services.get_next_from_queue(user)
+            queue = formqueue_services.get_next(user)
             return queue.pk if queue else None
 
         user = auth_models.User.objects.create_user('u1')
