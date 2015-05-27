@@ -18,12 +18,28 @@ def create_agent_from_title(request, title):
     return core_models.Agent.objects.create(title=title, user=request.user)
 
 
-def save_dataset_form(request, form, agent):
+def save_dataset_form(request, form, queue, agent):
+    create = not form.instance.pk
     data = form.cleaned_data
     dataset = form.save(commit=False)
     dataset.user = request.user
     dataset.agent = data['agent'] or create_agent_from_title(request, agent)
     dataset.save()
+
+    existing_sources = dataset.sources.values_list('pk', flat=True)
+    source_ids = []
+    for link, source in reversed(data['sources']):
+        if source is None:
+            queue.add_from_dataset(dataset, link, create)
+        else:
+            source_ids.append(source.pk)
+            if source.pk not in existing_sources:
+                dataset.sources.add(source)
+
+    # Delete datasets that are no longer in dataset links
+    for source in dataset.sources.exclude(id__in=source_ids):
+        dataset.sources.remove(source)
+
     return dataset
 
 

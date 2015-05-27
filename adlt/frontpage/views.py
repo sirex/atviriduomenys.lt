@@ -61,10 +61,10 @@ def project_update(request, agent_slug, project_slug):
     if request.method == 'POST':
         form, agent = frontpage_helpers.get_agent_form(request.POST, frontpage_forms.ProjectForm, instance=project)
         if form.is_valid():
-            queue = frontpage_queues.DatasetQueue(request)
+            queue = frontpage_queues.ProjectDatasetQueue.get(request)
             frontpage_helpers.save_project_form(request, form, queue, agent)
-            if queue.is_active():
-                return queue.redirect()
+            if queue.source.is_active():
+                return queue.source.redirect()
             else:
                 messages.success(request, ugettext("Projektas „%s“ atnaujintas." % project))
                 return redirect(project)
@@ -83,10 +83,10 @@ def project_form(request):
     if request.method == 'POST':
         form, agent = frontpage_helpers.get_agent_form(request.POST, frontpage_forms.ProjectForm)
         if form.is_valid():
-            queue = frontpage_queues.DatasetQueue(request)
+            queue = frontpage_queues.ProjectDatasetQueue.get(request)
             project = frontpage_helpers.save_project_form(request, form, queue, agent)
-            if queue.is_active():
-                return queue.redirect()
+            if queue.source.is_active():
+                return queue.source.redirect()
             else:
                 messages.success(request, ugettext("Projektas „%s“ sėkmingai sukurtas." % project))
                 return redirect(project)
@@ -108,9 +108,13 @@ def dataset_update(request, agent_slug, dataset_slug):
     if request.method == 'POST':
         form, agent = frontpage_helpers.get_agent_form(request.POST, frontpage_forms.DatasetForm, instance=dataset)
         if form.is_valid():
-            dataset = frontpage_helpers.save_dataset_form(request, form, agent)
-            messages.success(request, ugettext("Duomenų šaltinis „%s“ atnaujintas." % dataset))
-            return redirect(dataset)
+            queue = frontpage_queues.DatasetSourceQueue.get(request)
+            frontpage_helpers.save_dataset_form(request, form, queue, agent)
+            if queue.source.is_active():
+                return queue.source.redirect()
+            else:
+                messages.success(request, ugettext("Duomenų šaltinis „%s“ atnaujintas." % dataset))
+                return redirect(dataset)
     else:
         form = frontpage_forms.DatasetForm(instance=dataset)
 
@@ -121,19 +125,17 @@ def dataset_update(request, agent_slug, dataset_slug):
 
 @login_required
 def dataset_form(request):
-    queue = frontpage_queues.DatasetQueue(request)
-
+    queue = frontpage_queues.DatasetSourceQueue.get(request)
     if request.method == 'POST':
         form, agent = frontpage_helpers.get_agent_form(request.POST, frontpage_forms.DatasetForm)
         if form.is_valid():
-            dataset = frontpage_helpers.save_dataset_form(request, form, agent)
-            queue.process(dataset)
-            if queue.is_active():
-                return queue.redirect()
+            dataset = frontpage_helpers.save_dataset_form(request, form, queue, agent)
+            queue.source.process(dataset)
+            if queue.source.is_active():
+                return queue.source.redirect()
             else:
                 messages.success(request, ugettext("Duomenų šaltinis „%s“ sėkminngai sukurtas." % dataset))
                 return redirect(dataset)
-
     else:
         form = frontpage_forms.DatasetForm(initial=queue.initial())
 

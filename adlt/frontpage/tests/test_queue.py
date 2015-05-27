@@ -1,10 +1,12 @@
 import django_webtest
 
+import django.test
 import django.contrib.auth.models as auth_models
 
 import adlt.core.models as core_models
 import adlt.core.factories as core_factories
 import adlt.formqueue.services as formqueue_services
+import adlt.frontpage.queues as frontpage_queues
 
 
 class ViewTests(django_webtest.WebTest):
@@ -140,3 +142,59 @@ class ViewTests(django_webtest.WebTest):
             '/datasets/agent-7/dataset-14/',
             '/datasets/agent-7/new-dataset/',
         ])
+
+    def test_dataset_sources(self):
+        def qref():
+            queue = formqueue_services.get_next(user)
+            return queue.pk if queue else None
+
+        user = auth_models.User.objects.create_user('u1')
+        agent = core_factories.AgentFactory(title='Agent 7')
+        dataset = core_factories.DatasetFactory(title='Dataset 14', agent=agent)
+
+        resp = self.app.get('/datasets/agent-7/dataset-14/update/', user='u1')
+        resp.form['sources'] = 'New dataset\nhttp://example.com/1\n'
+        resp = resp.form.submit()
+
+        self.assertEqual(resp.status_int, 302)
+        self.assertEqual(resp.location, 'http://localhost:80/datasets/create/?qref=%d' % qref())
+
+        # Add first primary dataset
+        resp = resp.follow()
+        self.assertEqual(resp.form['title'].value, 'New dataset')
+        self.assertEqual(resp.form['link'].value, '')
+        resp.form['agent'] = agent.pk
+        resp.form['maturity_level'] = '3'
+        resp.form['description'] = 'Dataset 3.'
+        resp = resp.form.submit()
+
+        self.assertEqual(resp.status_int, 302)
+        self.assertEqual(resp.location, 'http://localhost:80/datasets/create/?qref=%d' % qref())
+        self.assertEqual([ds.get_absolute_url() for ds in dataset.sources.all()], [
+            '/datasets/agent-7/new-dataset/',
+        ])
+
+        # Add second primary dataset
+        resp = resp.follow()
+        self.assertEqual(resp.form['title'].value, '')
+        self.assertEqual(resp.form['link'].value, 'http://example.com/1')
+        resp.form['title'] = 'Example dataset'
+        resp.form['agent'] = agent.pk
+        resp.form['maturity_level'] = '3'
+        resp.form['description'] = 'Example dataset.'
+        resp = resp.form.submit()
+
+        self.assertEqual(resp.status_int, 302)
+        self.assertEqual(qref(), None)
+        self.assertEqual(resp.location, 'http://localhost:80/datasets/agent-7/dataset-14/')
+        self.assertEqual([ds.get_absolute_url() for ds in dataset.sources.all()], [
+            '/datasets/agent-7/new-dataset/',
+            '/datasets/agent-7/example-dataset/',
+        ])
+
+
+class QueueTests(django.test.TestCase):
+    def test_unknown_source_value(self):
+        item = core_models.Queue(context={'source': 'unknown'})
+        queue = frontpage_queues.DatasetQueue(None, item)
+        self.assertRaises(ValueError, lambda: queue.source)

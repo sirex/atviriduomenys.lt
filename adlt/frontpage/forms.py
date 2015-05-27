@@ -44,11 +44,18 @@ class DatasetForm(forms.ModelForm):
         "Organizacija arba individualus asmuo teikiantis duomenis. Pasirinkite esamą iš sąrašo arba įveskite "
         "naują organizacijos pavadinimą arba individualaus asmens vardą."
     ))
+    sources = linkref.LinkRefField(
+        core_models.Dataset.objects.all(), r'/datasets/(?P<agent__slug>[a-z0-9-]+)/(?P<slug>[a-z0-9-]+)/',
+        required=False, label=_("Pirminiai šaltiniai"), help_text=_(
+            "Nurodykite pirminius duomenų šaltinius, jei tokių yra, kurių pagrindu buvo sukurtas šis išvestinis "
+            "duomenų šaltinis."
+        )
+    )
 
     class Meta:
         model = core_models.Dataset
         fields = (
-            'title', 'agent', 'maturity_level', 'link', 'description',
+            'title', 'agent', 'maturity_level', 'link', 'sources', 'description',
         )
         widgets = {
             'description': forms.Textarea(attrs={'rows': 16}),
