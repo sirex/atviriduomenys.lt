@@ -36,6 +36,8 @@ def dataset_details(request, agent_slug, dataset_slug):
     return render(request, 'frontpage/dataset_details.html', {
         'dataset': dataset,
         'projects': dataset.project_set.all(),
+        'derived_datasets': dataset.datasets.all().select_related('agent'),
+        'source_datasets': dataset.sources.all().select_related('agent'),
         'active_topmenu_item': 'dataset-list',
         'can_update': request.user.is_authenticated() and (request.user.is_superuser or dataset.user == request.user)
     })

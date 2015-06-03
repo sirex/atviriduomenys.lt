@@ -2,6 +2,7 @@
 {% load trans from i18n %}
 {% load markdown from adltcommon %}
 {% load likebutton from adltcommon %}
+{% load stars from adltcommon %}
 
 
 {% block content %}
@@ -28,9 +29,8 @@
 {% endif %}
 
 {% if projects %}
-<h2>Projektai naudojantys šį duomenų šaltinį</h2>
+<h2>{% trans "Projektai naudojantys šį duomenų šaltinį" %}</h2>
 
-{% if projects %}
 <table class="table">
   <thead>
     <tr>
@@ -46,6 +46,51 @@
   </tbody>
 </table>
 {% endif %}
+
+{% if source_datasets %}
+<h2>{% trans "Pirminiai duomenų šaltiniai" %}</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>{% trans "Duomenų šaltinis" %}</th>
+      <th>{% trans "Tiekėjas" %}</th>
+      <th>{% trans "Brandos lygis" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ds in source_datasets %}
+    <tr>
+      <td><a href="{% url 'dataset-details' ds.agent.slug ds.slug %}">{{ ds.title }}</a></td>
+      <td>{{ ds.agent.title }}</td>
+      <td>{% stars ds.maturity_level %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if derived_datasets %}
+<h2>{% trans "Išvestiniai duomenų šaltiniai" %}</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>{% trans "Duomenų šaltinis" %}</th>
+      <th>{% trans "Tiekėjas" %}</th>
+      <th>{% trans "Brandos lygis" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ds in derived_datasets %}
+    <tr>
+      <td><a href="{% url 'dataset-details' ds.agent.slug ds.slug %}">{{ ds.title }}</a></td>
+      <td>{{ ds.agent.title }}</td>
+      <td>{% stars ds.maturity_level %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endif %}
 
 {% endblock %}
