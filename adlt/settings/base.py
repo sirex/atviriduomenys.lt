@@ -203,6 +203,7 @@ INSTALLED_APPS += (
     'allauth.socialaccount.providers.persona',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.linkedin',
 )
 
 SORTED_AUTH_PROVIDERS = (
@@ -210,6 +211,7 @@ SORTED_AUTH_PROVIDERS = (
     ('google', STATIC_URL + 'auth/google.png'),
     ('openid.yahoo', STATIC_URL + 'auth/yahoo.png'),
     ('facebook', STATIC_URL + 'auth/facebook.png'),
+    ('linkedin', STATIC_URL + 'auth/linkedin.png'),
 )
 
 SORTED_OPENID_PROVIDERS = (
@@ -238,5 +240,14 @@ SOCIALACCOUNT_PROVIDERS = {
         'METHOD': 'oauth2',
         'VERIFIED_EMAIL': True,
         'VERSION': 'v2.3',
+    },
+    'linkedin': {
+        'SCOPE': ['r_emailaddress'],
+        'PROFILE_FIELDS': [
+            'id',
+            'first-name',
+            'last-name',
+            'email-address',
+        ],
     },
 }
