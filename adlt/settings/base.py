@@ -204,6 +204,7 @@ INSTALLED_APPS += (
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.linkedin',
+    'allauth.socialaccount.providers.twitter',
 )
 
 SORTED_AUTH_PROVIDERS = (
@@ -212,6 +213,7 @@ SORTED_AUTH_PROVIDERS = (
     ('openid.yahoo', STATIC_URL + 'auth/yahoo.png'),
     ('facebook', STATIC_URL + 'auth/facebook.png'),
     ('linkedin', STATIC_URL + 'auth/linkedin.png'),
+    ('twitter', STATIC_URL + 'auth/twitter.png'),
 )
 
 SORTED_OPENID_PROVIDERS = (
