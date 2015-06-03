@@ -19,6 +19,7 @@ def get_provider_urls(provider):  # pylint: disable=redefined-outer-name
 urlpatterns = [
     url(r'^login/$', accounts_views.login, name='accounts_login'),
     url(r'^logout/$', accounts_views.logout, name='accounts_logout'),
+    url(r'^logout/$', accounts_views.logout, name='account_logout'),  # django-allauth requires this url name
     url(r'^settings/$', accounts_views.settings, name='accounts_settings'),
     url(r'', include('allauth.socialaccount.urls')),
 ]

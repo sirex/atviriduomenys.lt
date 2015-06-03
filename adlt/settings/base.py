@@ -183,6 +183,7 @@ INSTALLED_APPS += (
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -201,12 +202,14 @@ INSTALLED_APPS += (
     'allauth.socialaccount.providers.openid',
     'allauth.socialaccount.providers.persona',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
 )
 
 SORTED_AUTH_PROVIDERS = (
     ('persona', STATIC_URL + 'auth/persona.png'),
     ('google', STATIC_URL + 'auth/google.png'),
     ('openid.yahoo', STATIC_URL + 'auth/yahoo.png'),
+    ('facebook', STATIC_URL + 'auth/facebook.png'),
 )
 
 SORTED_OPENID_PROVIDERS = (
@@ -229,5 +232,11 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {
             'access_type': 'online',
         }
-    }
+    },
+    'facebook': {
+        'SCOPE': ['email', 'public_profile'],
+        'METHOD': 'oauth2',
+        'VERIFIED_EMAIL': True,
+        'VERSION': 'v2.3',
+    },
 }
