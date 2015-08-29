@@ -15,6 +15,7 @@ class Item(object):
 
 menus = {
     'topmenu': [
+        Item(_('ODFxVilnius 2015'), 'odfxvilnius-project-list'),
         Item(_('Tiekėjai'), 'index'),
         Item(_('Duomenys'), 'dataset-list'),
         Item(_('Projektai'), 'project-list'),

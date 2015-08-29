@@ -57,6 +57,19 @@ def project_rating():
     )
 
 
+def odfxvilnius_project_rating():
+    return (
+        core_models.Project.objects.
+        values('agent__slug', 'slug', 'title', 'likes').
+        filter(agent_id=38).
+        annotate(
+            stars=Avg('datasets__maturity_level'),
+            datasets=Count('datasets'),
+        ).
+        order_by('-likes', 'title')
+    )
+
+
 def dataset_rating():
     return (
         core_models.Dataset.objects.

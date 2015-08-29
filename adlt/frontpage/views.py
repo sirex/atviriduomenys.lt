@@ -25,6 +25,12 @@ def project_list(request):
     })
 
 
+def odfxvilnius_list(request):
+    return render(request, 'frontpage/project_list.html', {
+        'projects': frontpage_services.odfxvilnius_project_rating(),
+    })
+
+
 def dataset_list(request):
     return render(request, 'frontpage/dataset_list.html', {
         'datasets': frontpage_services.dataset_rating(),

@@ -9,6 +9,7 @@ slug = r'[a-z0-9-]+'
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^odfxvilnius/$', views.odfxvilnius_list, name='odfxvilnius-project-list'),
     url(r'^projects/$', views.project_list, name='project-list'),
     url(r'^projects/create/$', views.project_form, name='create-project'),
     url(r'^projects/(?P<agent_slug>%s)/(?P<project_slug>%s)/$' % (slug, slug), views.project_details, name='project-details'),
